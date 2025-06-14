@@ -29,11 +29,7 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      await login(data.email, data.password);
-    } catch (error) {
-      console.error("Error de inicio de sesión:", error);
-    }
+    await login(data.email, data.password);
   };
 
   return (

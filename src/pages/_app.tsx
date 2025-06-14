@@ -68,33 +68,33 @@ const darkTheme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiInputLabel-root': {
-            transform: 'translate(14px, -9px) scale(0.75)',
-            background: '#fff',
-            padding: '0 4px',
-            color: 'rgba(0, 0, 0, 0.7)',
+          "& .MuiInputLabel-root": {
+            transform: "translate(14px, -9px) scale(0.75)",
+            background: "#fff",
+            padding: "0 4px",
+            color: "rgba(0, 0, 0, 0.7)",
           },
-          '& .MuiInputLabel-root.Mui-focused': {
-            color: '#000000',
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#000000",
           },
-          '& .MuiInputLabel-root.MuiFormLabel-filled': {
-            color: '#000000',
+          "& .MuiInputLabel-root.MuiFormLabel-filled": {
+            color: "#000000",
           },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: 'rgba(0, 0, 0, 0.15)',
-              borderWidth: '1px',
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: "rgba(0, 0, 0, 0.15)",
+              borderWidth: "1px",
             },
-            '&:hover fieldset': {
-              borderWidth: '1px',
-              borderColor: '#000000',
+            "&:hover fieldset": {
+              borderWidth: "1px",
+              borderColor: "#000000",
             },
-            '&.Mui-focused fieldset': {
-              borderWidth: '1px',
+            "&.Mui-focused fieldset": {
+              borderWidth: "1px",
             },
           },
-          '& .MuiInputLabel-shrink': {
-            transform: 'translate(14px, -9px) scale(0.75)',
+          "& .MuiInputLabel-shrink": {
+            transform: "translate(14px, -9px) scale(0.75)",
           },
         },
       },
@@ -102,23 +102,23 @@ const darkTheme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         notchedOutline: {
-          borderWidth: '1px',
+          borderWidth: "1px",
         },
         root: {
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#000000',
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#000000",
           },
-        }
-      }
+        },
+      },
     },
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          '&.Mui-focused': {
-            color: '#000000',
+          "&.Mui-focused": {
+            color: "#000000",
           },
-          '&.MuiFormLabel-filled': {
-            color: '#000000',
+          "&.MuiFormLabel-filled": {
+            color: "#000000",
           },
         },
       },

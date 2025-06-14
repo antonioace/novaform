@@ -16,6 +16,7 @@ interface AuthContextType {
   registerLoading: boolean;
   logoutLoading: boolean;
   setUser: (user: IAuthResponse | null) => void;
+  idUser: string | null;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -27,6 +28,7 @@ const AuthContext = createContext<AuthContextType>({
   registerLoading: false,
   logoutLoading: false,
   setUser: () => {},
+  idUser: null,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -40,13 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { handleRegister, isLoading: registerLoading } = useRegister();
 
   const login = async (email: string, password: string) => {
-    try {
-      const userData = await handleLogin(email, password);
-      setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
-    } catch (error) {
-      throw error;
-    }
+    const userData = await handleLogin(email, password);
+    setUser(userData || null);
   };
 
   const register = async (userData: RegisterData) => {
@@ -60,7 +57,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!response.error) {
       showSuccess("Sesión cerrada exitosamente");
       setUser(null);
-      localStorage.removeItem("user");
       router.push("/auth/login");
     }
     setLogoutLoading(false);
@@ -70,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (!mounted) return null;
-  console.log("user", user);
+  const idUser = user?.session?.user?.id;
   return (
     <AuthContext.Provider
       value={{
@@ -83,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         registerLoading,
         logoutLoading,
         setUser,
+        idUser: idUser || null,
       }}
     >
       {children}

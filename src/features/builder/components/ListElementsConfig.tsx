@@ -4,6 +4,7 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import CardElement from "./CardElemento";
+import { TIPOS_BLOQUES } from "../utils/tiposElementos";
 
 export interface ListElementsConfigProps {
   title: string;
@@ -38,7 +39,12 @@ function ListElementsConfig({ title, elements }: ListElementsConfigProps) {
       {open && (
         <div className="grid grid-cols-3 gap-3 p-2">
           {elements.map((el) => (
-            <CardElement key={el.label} icon={el.icon} label={el.label} />
+            <CardElement 
+              key={el.label} 
+              icon={el.icon} 
+              label={el.label}
+              type={el.type as keyof typeof TIPOS_BLOQUES}
+            />
           ))}
         </div>
       )}

@@ -2,10 +2,10 @@ import React, { createContext, useContext, useState } from 'react';
 import { Snackbar, Alert, AlertColor } from '@mui/material';
 
 interface NotificationContextType {
-  showNotification: (message: string, severity?: AlertColor) => void;
+  showNotification: (severity: AlertColor, message: string) => void;
   showSuccess: (message: string) => void;
   showError: (message: string) => void;
-  showWarning: (message: string) => void;
+  showWarn: (message: string) => void;
   showInfo: (message: string) => void;
 }
 
@@ -20,16 +20,16 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setOpen(false);
   };
 
-  const showNotification = (message: string, severity: AlertColor = 'info') => {
+  const showNotification = (severity: AlertColor, message: string) => {
     setMessage(message);
     setSeverity(severity);
     setOpen(true);
   };
 
-  const showSuccess = (message: string) => showNotification(message, 'success');
-  const showError = (message: string) => showNotification(message, 'error');
-  const showWarning = (message: string) => showNotification(message, 'warning');
-  const showInfo = (message: string) => showNotification(message, 'info');
+  const showSuccess = (message: string) => showNotification('success', message);
+  const showError = (message: string) => showNotification('error', message); 
+  const showWarn = (message: string) => showNotification('warning', message);
+  const showInfo = (message: string) => showNotification('info', message);
 
   return (
     <NotificationContext.Provider
@@ -37,7 +37,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         showNotification,
         showSuccess,
         showError,
-        showWarning,
+        showWarn,
         showInfo,
       }}
     >

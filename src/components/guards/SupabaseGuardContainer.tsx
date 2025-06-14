@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import supabase from "@/config/supabase.config";
@@ -12,13 +13,20 @@ interface SupabaseGuardProps {
 export const SupabaseGuard = ({ children }: SupabaseGuardProps) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { setUser, user } = useAuth();
+  const { setUser, user, logout } = useAuth();
 
   useEffect(() => {
     // Obtener la sesión actual
-    authService.checkTokenCustomBackend().then((resp) => {
-      console.log("PIN PANNNN", resp);
-    });
+    authService
+      .checkTokenCustomBackend()
+      .then((resp) => {
+        if (!resp?.success) {
+          logout();
+        }
+      })
+      .catch(() => {
+        logout();
+      });
     const getSession = async () => {
       try {
         const {
@@ -59,7 +67,7 @@ export const SupabaseGuard = ({ children }: SupabaseGuardProps) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router]);
+  }, []);
 
   if (loading) {
     return <GlobalLoading />;

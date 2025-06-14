@@ -1,6 +1,5 @@
 import React from "react";
 import { Drawer } from "@mui/material";
-import { Dialog, DialogTitle, DialogActions } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -13,6 +12,8 @@ import {
   MdCleaningServices,
   MdNavigation,
   MdStorage,
+  MdVisibility,
+  MdClose,
 } from "react-icons/md";
 import { TiFlowMerge } from "react-icons/ti";
 import NovaFormLogo from "@/features/shared/components/theme/NovaFormLogo";
@@ -20,6 +21,8 @@ import PanelConfigElements from "./PanelConfigElements";
 import { useBuilder } from "../context/BuilderContext";
 import ColeccionesConfig from "../../database-creator/components/ColeccionesConfig";
 import PanelConfigNavegacion from "./PanelConfigNavegacion";
+import LimpiarModal from "./LimpiarModal";
+import VistaPrevita from "./VistaPrevita";
 
 enum DISPOSITIVOS {
   DESKTOP = "DESKTOP",
@@ -31,8 +34,8 @@ enum TIPOS_MENUS {
   AGREGAR_ELEMENTOS = "AGREGAR_ELEMENTOS",
   NAVEGACION = "NAVEGACION",
   FLUJO = "FLUJO",
-  LIMPIAR = "LIMPIAR",
   COLECCIONES = "COLECCIONES",
+  LIMPIAR = "LIMPIAR",
 }
 
 interface CustomToolbarProps {
@@ -41,7 +44,7 @@ interface CustomToolbarProps {
 }
 
 const CustomToolbar: React.FC<CustomToolbarProps> = () => {
-  const { setDispositivoActual } = useBuilder();
+  const { setDispositivoActual, savePage, savingPage } = useBuilder();
   const [modoEdicion, setModoEdicion] = React.useState<DISPOSITIVOS>(
     DISPOSITIVOS.DESKTOP
   );
@@ -52,7 +55,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
   };
   const [drawerVistaPrevia, setDrawerVistaPrevia] =
     React.useState<boolean>(false);
-  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [openLimpiarModal, setOpenLimpiarModal] = React.useState(false);
 
   const optionsHorizontalToolbar = [
     {
@@ -75,7 +78,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
       },
     },
     {
-      key: TIPOS_MENUS.LIMPIAR,
+      key: "LIMPIAR",
       icon: (
         <MdCleaningServices
           style={{
@@ -86,11 +89,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
       ),
       label: "Limpiar",
       onClick: () => {
-        if (tipoConfig === TIPOS_MENUS.LIMPIAR) {
-          setTipoConfig(null);
-          return;
-        }
-        setTipoConfig(TIPOS_MENUS.LIMPIAR);
+        setOpenLimpiarModal(true);
       },
     },
     {
@@ -168,30 +167,67 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
             },
           },
         }}
-      ></Drawer>
-
-      <Dialog open={openConfirm} onClose={() => setOpenConfirm(false)}>
-        <DialogTitle>
-          ¿Estás seguro de que deseas limpiar el contenido?
-        </DialogTitle>
-        <DialogActions>
+      >
+        {/* Header con botón de cerrar */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "12px 16px",
+            borderBottom: "1px solid #e5e7eb",
+            backgroundColor: "#ffffff",
+            zIndex: 10,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <MdVisibility
+              style={{
+                fontSize: "20px",
+                color: "#6b7280",
+              }}
+            />
+            <h2 style={{ margin: 0, fontSize: "16px", fontWeight: "600", color: "#374151" }}>
+              Vista Previa
+            </h2>
+          </div>
           <button
-            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
-            onClick={() => setOpenConfirm(false)}
-          >
-            Cancelar
-          </button>
-          <button
-            className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-md"
-            onClick={() => {
-              // Aquí iría la lógica de limpieza
-              setOpenConfirm(false);
+            onClick={() => setDrawerVistaPrevia(false)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 12px",
+              backgroundColor: "#f3f4f6",
+              border: "1px solid #d1d5db",
+              borderRadius: "6px",
+              fontSize: "14px",
+              color: "#374151",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#e5e7eb";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#f3f4f6";
             }}
           >
-            Confirmar
+            <MdClose style={{ fontSize: "16px" }} />
+            Regresar
           </button>
-        </DialogActions>
-      </Dialog>
+        </div>
+
+        {/* Contenido de la vista previa */}
+        <div style={{ flex: 1, overflow: "hidden" }}>
+          <VistaPrevita />
+        </div>
+      </Drawer>
+
+      <LimpiarModal
+        open={openLimpiarModal}
+        onClose={() => setOpenLimpiarModal(false)}
+      />
 
       <div
         style={{
@@ -308,14 +344,41 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
             </span>
           </div>
           <div className="ml-auto flex items-center">
-            <div className="text-xs rounded-2xl mr-4  border border-[#EEEEEE] py-[3px] px-2 font-medium flex items-center  justify-center gap-3 cursor-pointer">
+            <div 
+              onClick={() => {
+                setDrawerVistaPrevia(true);
+                setTipoConfig(null); // Cerrar cualquier panel abierto
+              }}
+              className="text-xs rounded-2xl mr-2 border border-[#EEEEEE] py-[3px] px-2 font-medium flex items-center justify-center gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
+            >
+              <MdVisibility
+                style={{
+                  fontSize: "10px",
+                  color: "#D1D1D1",
+                }}
+              />
+              Vista Previa
+            </div>
+            <div 
+              onClick={async () => {
+                const success = await savePage();
+                if (success) {
+                  console.log("Página guardada exitosamente");
+                }
+              }}
+              className="text-xs rounded-2xl mr-4  border border-[#EEEEEE] py-[3px] px-2 font-medium flex items-center  justify-center gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
+              style={{
+                opacity: savingPage ? 0.6 : 1,
+                pointerEvents: savingPage ? 'none' : 'auto'
+              }}
+            >
               <MdSave
                 style={{
                   fontSize: "10px",
                   color: "#D1D1D1",
                 }}
               />{" "}
-              Guardar
+              {savingPage ? "Guardando..." : "Guardar"}
             </div>
           </div>
         </div>

@@ -11,8 +11,7 @@ function ListItemLink(props: ListItemLinkProps) {
 
   const pathname = usePathname();
   const isActive = pathname === to;
-  console.log("Route pathname", pathname);
-  console.log("To", to);
+
   const Icon = icon;
   return (
     <li>

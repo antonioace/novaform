@@ -1,5 +1,4 @@
 import { IBaseResponse } from "@/features/shared/base.types";
-import { IUserResponse } from "@/features/users/types/user.types";
 
 export interface ICatalogueResponse extends IBaseResponse {
   id: string;
@@ -12,10 +11,14 @@ export interface ICatalogueResponse extends IBaseResponse {
   description: string;
 
   catalogueTypeId?: string;
+}
 
-  user?: IUserResponse;
-
-  catalogueType?: ICatalogueResponse;
-
-  subCatalogues?: ICatalogueResponse[];
+export interface ICatalogueByFiltersResponse {
+  data: ICatalogueResponse[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }

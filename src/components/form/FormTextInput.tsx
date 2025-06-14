@@ -1,9 +1,10 @@
-import { Controller, ControllerProps } from "react-hook-form";
-import { TextField } from "@mui/material";
+import { Controller, ControllerProps, FieldValues, Path } from "react-hook-form";
+import { TextField, TextFieldProps } from "@mui/material";
 
-interface FormTextInputProps
-  extends Pick<ControllerProps, "rules" | "control"> {
-  fieldName: string;
+interface FormTextInputProps<T extends FieldValues = FieldValues>
+  extends Pick<ControllerProps<T>, "rules" | "control">,
+    Omit<TextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'> {
+  fieldName: Path<T>;
   label?: string;
   required?: boolean;
   helpText?: string;
@@ -16,7 +17,7 @@ interface FormTextInputProps
   variant?: "outlined" | "filled" | "standard";
 }
 
-export const FormTextInput = ({
+export const FormTextInput = <T extends FieldValues = FieldValues>({
   control,
   fieldName,
   label,
@@ -31,7 +32,7 @@ export const FormTextInput = ({
   size = "medium",
   variant = "outlined",
   ...inputProps
-}: FormTextInputProps) => {
+}: FormTextInputProps<T>) => {
   return (
     <div className="field mb-4">
       <Controller

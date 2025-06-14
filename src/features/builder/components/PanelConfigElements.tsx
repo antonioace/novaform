@@ -2,6 +2,7 @@ import React from "react";
 import ListElementsConfig from "./ListElementsConfig";
 import { configuracionByElement } from "../utils/configuracion";
 import CardElement from "./CardElemento";
+import { TIPOS_BLOQUES } from "../utils/tiposElementos";
 
 function PanelConfigElements() {
   const [selectedOptionConfig, setSelectedOptionConfig] = React.useState<
@@ -29,7 +30,7 @@ function PanelConfigElements() {
         borderRight: "1px solid #eeeeee",
       }}
     >
-      <div className="flex flex-col  grow">
+      <div className="flex flex-col  grow overflow-auto">
         <div className="flex flex-col border-b border-b-[#EEEEEE] pb-2">
           <div className="flex flex-col p-2">
             {" "}
@@ -108,6 +109,7 @@ function PanelConfigElements() {
                 key={element.label}
                 icon={element.icon}
                 label={element.label}
+                type={element.type as keyof typeof TIPOS_BLOQUES}
               />
             ))}
           </div>

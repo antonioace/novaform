@@ -2,6 +2,7 @@ import {
   AiFillHome,
   AiFillSetting,
   AiOutlineBuild,
+  AiOutlineProject,
 } from "react-icons/ai";
 
 export interface NavigationItem {
@@ -34,6 +35,11 @@ export const mainNavigation: NavigationSection[] = [
         name: "Builder",
         href: "/dashboard/builder",
         icon: AiOutlineBuild,
+      },
+      {
+        name: "Proyectos",
+        href: "/dashboard/project",
+        icon: AiOutlineProject,
       },
     ],
   },

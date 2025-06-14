@@ -63,32 +63,31 @@ export class AuthService extends BackendService {
   }: LoginData): Promise<IResponseService<IAuthResponse | null>> {
     console.log("🔄 Iniciando sesión...");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      console.error("❌ Error en el inicio de sesión:", error);
+    try {
+      const { data , error} = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        throw error;
+      }
+      console.log("🔄 Iniciando sesión...", data);
+      return {
+        success: true,
+        data: {
+          user: data.user,
+          session: data.session,
+        },
+        error: null,
+      };
+    } catch (error) {
+      console.error("❌ Error inesperado en el inicio de sesión:", error);
       return {
         success: false,
         data: null,
-        error:
-          error instanceof AuthError
-            ? error.message
-            : "Error en el inicio de sesión",
+        error: "Error inesperado en el inicio de sesión",
       };
     }
-
-    console.log("✅ Sesión iniciada exitosamente");
-    return {
-      success: true,
-      data: {
-        user: data.user,
-        session: data.session,
-      },
-      error: null,
-    };
   }
 
   async logout(): Promise<IResponseService<null>> {
@@ -141,6 +140,61 @@ export class AuthService extends BackendService {
       error: null,
     };
   }
+
+  async resetPassword(email: string): Promise<IResponseService<null>> {
+    console.log("🔄 Enviando correo de recuperación...");
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/update-password`,
+    });
+
+    if (error) {
+      console.error("❌ Error al enviar correo de recuperación:", error);
+      return {
+        success: false,
+        data: null,
+        error:
+          error instanceof AuthError
+            ? error.message
+            : "Error al enviar correo de recuperación",
+      };
+    }
+
+    console.log("✅ Correo de recuperación enviado exitosamente");
+    return {
+      success: true,
+      data: null,
+      error: null,
+    };
+  }
+
+  async updatePassword(newPassword: string): Promise<IResponseService<null>> {
+    console.log("🔄 Actualizando contraseña...");
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      console.error("❌ Error al actualizar contraseña:", error);
+      return {
+        success: false,
+        data: null,
+        error:
+          error instanceof AuthError
+            ? error.message
+            : "Error al actualizar contraseña",
+      };
+    }
+
+    console.log("✅ Contraseña actualizada exitosamente");
+    return {
+      success: true,
+      data: null,
+      error: null,
+    };
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async checkTokenCustomBackend(): Promise<IResponseService<any>> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

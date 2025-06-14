@@ -8,8 +8,12 @@ import { Column } from "@/features/shared";
 interface TableCatalogueProps {
   onEdit: (catalogue: ICatalogueResponse) => void;
   onDelete: (catalogue: ICatalogueResponse) => void;
+  catalogues: ICatalogueResponse[];
+  page: number;
+  total: number;
+  onPageChange: (page: number) => void;
 }
-function TableCatalogue({ onEdit, onDelete }: TableCatalogueProps) {
+function TableCatalogue({ onEdit, onDelete, catalogues, page, total, onPageChange }: TableCatalogueProps) {
   const columns: Column[] = [
     {
       id: "name",
@@ -56,23 +60,15 @@ function TableCatalogue({ onEdit, onDelete }: TableCatalogueProps) {
       },
     },
   ];
-  const data: ICatalogueResponse[] = [
-    {
-      id: "1",
-      name: "Catalogo 1",
-      description: "Descripcion 1",
-      code: "1",
-    },
-  ];
   return (
     <div>
       <ServerSideDataTable
         columns={columns}
-        data={data}
-        totalItems={0}
-        page={1}
+        data={catalogues}
+        totalItems={total}
+        page={page}
         rowsPerPage={10}
-        onPageChange={() => {}}
+        onPageChange={onPageChange}
         onRowsPerPageChange={() => {}}
         onSortChange={() => {}}
       />

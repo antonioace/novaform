@@ -11,9 +11,12 @@ const axiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (session?.access_token) {
-      config.headers.Authorization = `Bearer ${session.access_token}`;
+    config.headers.Authorization = `Bearer ${session.access_token}`;
+      //  config.headers.Authorization = "xxx"
     }
     return config;
   },
@@ -28,7 +31,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       await supabase.auth.signOut();
-     // window.location.href = "/auth/login";
+      // window.location.href = "/auth/login";
     }
     return Promise.reject(error);
   }
