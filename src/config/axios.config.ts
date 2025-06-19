@@ -2,12 +2,11 @@ import axios from "axios";
 import supabase from "./supabase.config";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_BACKEND_URL || "http://localhost:3000",
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000",
   headers: {
     "Content-Type": "application/json",
   },
 });
-
 // Request interceptor
 axiosInstance.interceptors.request.use(
   async (config) => {
