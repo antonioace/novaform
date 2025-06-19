@@ -1,11 +1,11 @@
-import React  from "react";
+import React from "react";
 import Canvas from "../components/Canvas";
-import Config from "../components/Config";
-import CustomToolbar from "../components/CustomToolbar";
 import { BuilderProvider, useBuilder } from "../context/BuilderContext";
 import { ReactFlowProvider } from "@xyflow/react";
 import GlobalLoading from "@/features/shared/components/global-loading";
 import { useRouter } from "next/router";
+import ConfigElemento from "../components/ConfigElemento";
+import CustomToolbarEditor from "../components/CustomToolbarEditor";
 
 function BuilderPageContent() {
   const { loadingPage } = useBuilder();
@@ -14,7 +14,7 @@ function BuilderPageContent() {
   }
   return (
     <div className="flex flex-col h-full relative flex-1">
-      <CustomToolbar />
+      <CustomToolbarEditor />
       <div
         className="flex flex-grow overflow-hidden "
         style={{
@@ -24,15 +24,18 @@ function BuilderPageContent() {
         }}
       >
         <Canvas />
-        <Config />
+        <ConfigElemento />
       </div>
     </div>
   );
 }
 
-function BuilderPage() {
+export const BuilderPage = () => {
   const router = useRouter();
-  const { id } = router.query as { id: string };
+  if (!router.isReady) {
+    return <GlobalLoading />;
+  }
+  const { id } = router?.query as { id: string };
 
   return (
     <BuilderProvider id={id as string}>
@@ -41,6 +44,4 @@ function BuilderPage() {
       </ReactFlowProvider>
     </BuilderProvider>
   );
-}
-
-export default BuilderPage;
+};

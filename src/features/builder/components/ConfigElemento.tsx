@@ -3,7 +3,7 @@ import { useBuilder } from "../context/BuilderContext";
 import StylePanel from "./tools/StylePanel";
 import ContainerMainStylePanel from "./tools/ContainerMainStylePanel";
 
-function Config() {
+function ConfigElemento() {
   const { bloqueActual } = useBuilder();
 
   // Verificar si el elemento seleccionado es el contenedor principal
@@ -39,4 +39,4 @@ function Config() {
   );
 }
 
-export default Config;
+export default ConfigElemento;

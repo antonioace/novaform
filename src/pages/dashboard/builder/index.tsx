@@ -1,5 +1,5 @@
 import { SupabaseGuard } from "@/components/guards/SupabaseGuardContainer";
-import BuilderPage from "@/features/builder/pages/BuilderPage";
+import { BuilderPage } from "@/features/builder/pages/BuilderPage";
 import React from "react";
 function index() {
   return (

@@ -24,26 +24,20 @@ import PanelConfigNavegacion from "./PanelConfigNavegacion";
 import LimpiarModal from "./LimpiarModal";
 import VistaPrevita from "./VistaPrevita";
 
-enum DISPOSITIVOS {
-  DESKTOP = "DESKTOP",
-  TABLET = "TABLET",
-  MOBILE = "MOBILE",
-}
+const CustomToolbarEditor = () => {
+  enum DISPOSITIVOS {
+    DESKTOP = "DESKTOP",
+    TABLET = "TABLET",
+    MOBILE = "MOBILE",
+  }
 
-enum TIPOS_MENUS {
-  AGREGAR_ELEMENTOS = "AGREGAR_ELEMENTOS",
-  NAVEGACION = "NAVEGACION",
-  FLUJO = "FLUJO",
-  COLECCIONES = "COLECCIONES",
-  LIMPIAR = "LIMPIAR",
-}
-
-interface CustomToolbarProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  components?: any[];
-}
-
-const CustomToolbar: React.FC<CustomToolbarProps> = () => {
+  enum TIPOS_MENUS {
+    AGREGAR_ELEMENTOS = "AGREGAR_ELEMENTOS",
+    NAVEGACION = "NAVEGACION",
+    FLUJO = "FLUJO",
+    COLECCIONES = "COLECCIONES",
+    LIMPIAR = "LIMPIAR",
+  }
   const { setDispositivoActual, savePage, savingPage } = useBuilder();
   const [modoEdicion, setModoEdicion] = React.useState<DISPOSITIVOS>(
     DISPOSITIVOS.DESKTOP
@@ -187,7 +181,14 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
                 color: "#6b7280",
               }}
             />
-            <h2 style={{ margin: 0, fontSize: "16px", fontWeight: "600", color: "#374151" }}>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#374151",
+              }}
+            >
               Vista Previa
             </h2>
           </div>
@@ -344,7 +345,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
             </span>
           </div>
           <div className="ml-auto flex items-center">
-            <div 
+            <div
               onClick={() => {
                 setDrawerVistaPrevia(true);
                 setTipoConfig(null); // Cerrar cualquier panel abierto
@@ -359,7 +360,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
               />
               Vista Previa
             </div>
-            <div 
+            <div
               onClick={async () => {
                 const success = await savePage();
                 if (success) {
@@ -369,7 +370,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
               className="text-xs rounded-2xl mr-4  border border-[#EEEEEE] py-[3px] px-2 font-medium flex items-center  justify-center gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
               style={{
                 opacity: savingPage ? 0.6 : 1,
-                pointerEvents: savingPage ? 'none' : 'auto'
+                pointerEvents: savingPage ? "none" : "auto",
               }}
             >
               <MdSave
@@ -449,4 +450,4 @@ const CustomToolbar: React.FC<CustomToolbarProps> = () => {
   );
 };
 
-export default CustomToolbar;
+export default CustomToolbarEditor;
