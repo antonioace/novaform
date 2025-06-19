@@ -4,6 +4,7 @@ import { AuthError } from "@supabase/supabase-js";
 import { IAuthResponse, RegisterData, LoginData } from "../types";
 import { IResponseService } from "@/features/shared";
 import { BackendService } from "@/features/shared/service/backend.service";
+import { MESSAGES_ERROR_AUTH } from "../util/utils";
 
 export class AuthService extends BackendService {
   private static instance: AuthService;
@@ -64,14 +65,13 @@ export class AuthService extends BackendService {
     console.log("🔄 Iniciando sesión...");
 
     try {
-      const { data , error} = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) {
         throw error;
       }
-      console.log("🔄 Iniciando sesión...", data);
       return {
         success: true,
         data: {
@@ -80,19 +80,22 @@ export class AuthService extends BackendService {
         },
         error: null,
       };
-    } catch (error) {
+    } catch (error: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const authError = error as AuthError;
       console.error("❌ Error inesperado en el inicio de sesión:", error);
       return {
         success: false,
         data: null,
-        error: "Error inesperado en el inicio de sesión",
+        error:
+          MESSAGES_ERROR_AUTH?.[
+            authError?.code as keyof typeof MESSAGES_ERROR_AUTH
+          ] || "Error inesperado en el inicio de sesión",
       };
     }
   }
 
   async logout(): Promise<IResponseService<null>> {
-    console.log("🔄 Cerrando sesión...");
-
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -105,7 +108,6 @@ export class AuthService extends BackendService {
       };
     }
 
-    console.log("✅ Sesión cerrada exitosamente");
     return {
       success: true,
       data: null,

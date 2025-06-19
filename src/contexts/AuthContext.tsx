@@ -1,7 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useNotification } from "./NotificationContext";
 import authService from "@/features/auth/services/auth.service";
 import { useLogin } from "@/features/auth/hooks/useLogin";
 import { useRegister } from "@/features/auth/hooks/useRegister";
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [logoutLoading, setLogoutLoading] = useState(false);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { showSuccess } = useNotification();
 
   const { handleLogin, isLoading: loginLoading } = useLogin();
   const { handleRegister, isLoading: registerLoading } = useRegister();
@@ -55,7 +53,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await authService.logout();
 
     if (!response.error) {
-      showSuccess("Sesión cerrada exitosamente");
       setUser(null);
       router.push("/auth/login");
     }
