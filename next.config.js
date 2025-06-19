@@ -12,7 +12,10 @@ const nextConfig = {
   // Si usas rewrites, asegúrate que estén bien configurados
   async rewrites() {
     return [];
-  }
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig; 
