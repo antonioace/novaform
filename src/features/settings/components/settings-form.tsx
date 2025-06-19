@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import { FormTextInput, FormPasswordInput } from "@/components/form";
 import { useNotification } from "@/contexts/NotificationContext";
-import DataTable, { Column } from "../../../components/table/DataTable";
 import { useState } from "react";
 
 interface SettingsForm {
@@ -31,36 +30,7 @@ export default function SettingsForm() {
       city: "",
     },
   });
-  const columns: Column[] = [
-    {
-      id: "name",
-      key: "name",
-      label: "Nombre",
-      width: 100,
-      align: "left",
-      sortable: true,
-      disablePadding: false,
-    },
-    {
-      id: "username",
-      key: "username",
-      label: "Username",
-      width: 100,
-      align: "left",
-      sortable: true,
-      disablePadding: false,
-    },
-
-    {
-      id: "email",
-      key: "email",
-      label: "Email",
-      width: 100,
-      align: "left",
-      sortable: true,
-      disablePadding: false,
-    },
-  ];
+  
 
   const onSubmit = (formData: SettingsForm) => {
     showSuccess("Configuración actualizada correctamente");
@@ -128,16 +98,7 @@ export default function SettingsForm() {
           style={{ backgroundColor: "#000000", color: "#ffffff" }}
         />
       </form>
-      <div className="col-span-12 md:col-span-8 bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
-        <DataTable
-          columns={columns}
-          data={data}
-          style={{
-            border: "none",
-            boxShadow: "none",
-          }}
-        />
-      </div>
+      <div className="col-span-12 md:col-span-8 bg-gray-100 dark:bg-gray-800 p-4 rounded-md"></div>
     </div>
   );
 }
