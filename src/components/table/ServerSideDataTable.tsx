@@ -11,9 +11,9 @@ import {
   Box,
   Typography,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 import { PlusCircleIcon } from "@heroicons/react/16/solid";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { DataItem, ServerSideDataTableProps } from "@/features/shared";
 
 export const ServerSideDataTable = <T extends DataItem>({
@@ -60,7 +60,7 @@ export const ServerSideDataTable = <T extends DataItem>({
   return (
     <Paper
       className={className}
-      style={style}
+      style={{ ...style, position: "relative" }}
       elevation={3}
       sx={{
         width: "100%",
@@ -85,7 +85,6 @@ export const ServerSideDataTable = <T extends DataItem>({
           >
             {title}
           </Typography>
-          {loading && <CircularProgress size={24} />}
         </Box>
       )}
 
@@ -135,84 +134,58 @@ export const ServerSideDataTable = <T extends DataItem>({
             </TableRow>
           </TableHead>
           <TableBody key={`table-body-${data?.length || 0}-${page}`}>
-            {loading && data.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={
-                    columns.length + (selectable ? 1 : 0) + (actions ? 1 : 0)
-                  }
-                  align="center"
-                >
-                  Cargando...
-                </TableCell>
-              </TableRow>
-            ) : data.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={
-                    columns.length + (selectable ? 1 : 0) + (actions ? 1 : 0)
-                  }
-                  align="center"
-                >
-                  No hay datos disponibles
-                </TableCell>
-              </TableRow>
-            ) : (
-              data.map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.id}
-                    sx={{
-                      cursor: onRowClick ? "pointer" : "default",
-                    }}
-                  >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell
-                          key={column.id}
-                          align={
-                            column.align || (column.numeric ? "right" : "left")
-                          }
-                          style={{
-                            borderBottomStyle: "dashed",
-                            borderBottomWidth: "1px",
-                            borderBottomColor: "#d9d9d9",
+            {data?.map((row) => (
+              <TableRow
+                hover
+                role="checkbox"
+                tabIndex={-1}
+                key={row.id}
+                sx={{
+                  cursor: onRowClick ? "pointer" : "default",
+                }}
+              >
+                {columns.map((column) => {
+                  const value = row[column.id];
+                  return (
+                    <TableCell
+                      key={column.id}
+                      align={
+                        column.align || (column.numeric ? "right" : "left")
+                      }
+                      style={{
+                        borderBottomStyle: "dashed",
+                        borderBottomWidth: "1px",
+                        borderBottomColor: "#d9d9d9",
+                        ...styleCell,
+                      }}
+                      padding={column.disablePadding ? "none" : "normal"}
+                    >
+                      {column.format ? column.format(row) : value}
+                    </TableCell>
+                  );
+                })}
 
-                            ...styleCell,
-                          }}
-                          padding={column.disablePadding ? "none" : "normal"}
-                        >
-                          {column.format ? column.format(row) : value}
-                        </TableCell>
-                      );
-                    })}
-
-                    {actions && actions.length > 0 && (
-                      <TableCell padding="checkbox" align="right">
-                        <IconButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Aquí se podría implementar un menú de acciones
-                          }}
-                          size="small"
-                        >
-                          <PlusCircleIcon />
-                        </IconButton>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                );
-              })
-            )}
+                {actions && actions.length > 0 && (
+                  <TableCell padding="checkbox" align="right">
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Aquí se podría implementar un menú de acciones
+                      }}
+                      size="small"
+                    >
+                      <PlusCircleIcon />
+                    </IconButton>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
 
       <TablePagination
+        suppressHydrationWarning={true}
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
         count={totalItems}
@@ -225,6 +198,44 @@ export const ServerSideDataTable = <T extends DataItem>({
           `${from}-${to} de ${count}`
         }
       />
+
+      {/* Máscara de carga transparente */}
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            borderRadius: "16px",
+          }}
+        >
+          <Box
+            sx={{
+              animation: "spin 1s linear infinite",
+              "@keyframes spin": {
+                "0%": {
+                  transform: "rotate(0deg)",
+                },
+                "100%": {
+                  transform: "rotate(360deg)",
+                },
+              },
+            }}
+          >
+            <AiOutlineLoading3Quarters
+              size={40}
+              color="#1976d2"
+            />
+          </Box>
+        </Box>
+      )}
     </Paper>
   );
 };

@@ -28,7 +28,8 @@ export const BuilderProvider: React.FC<{
   config?: BlockConfig[];
   styles?: BlockStyles[];
   blocks?: Block[];
-}> = ({ children, id, config, styles, blocks }) => {
+  modeInital?: "edit" | "view";
+}> = ({ children, id, config, styles, blocks, modeInital = "edit" }) => {
   const [dispositivoActual, setDispositivoActual] = useState<DISPOSITIVOS>(
     DISPOSITIVOS.DESKTOP
   );
@@ -52,6 +53,14 @@ export const BuilderProvider: React.FC<{
   const [stylesList, setStylesList] = useState<BlockStyles[]>([]);
   const [configList, setConfigList] = useState<BlockConfig[]>([]);
   const { showNotification } = useNotification();
+  // Estado del menú contextual
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>({
+    isVisible: false,
+    x: 0,
+    y: 0,
+    targetBlock: null,
+  });
+  const [mode, setMode] = useState<"edit" | "view">(modeInital || "edit");
   // Estilos del contenedor principal que contiene todos los bloques
   const [containerMainStyles, setContainerMainStyles] = useState<{
     [key in DISPOSITIVOS]?: React.CSSProperties;
@@ -145,14 +154,6 @@ export const BuilderProvider: React.FC<{
       }
     }
   }, [page]);
-
-  // Estado del menú contextual
-  const [contextMenu, setContextMenu] = useState<ContextMenuState>({
-    isVisible: false,
-    x: 0,
-    y: 0,
-    targetBlock: null,
-  });
 
   const FORMULARIO_TYPES = [
     TIPOS_BLOQUES.INPUT_TEXTO,
@@ -659,7 +660,7 @@ export const BuilderProvider: React.FC<{
       const blockFound = findBlockByIdRecursive(blocksList, blockId);
       if (blockFound) {
         return {
-          blockList: [blockFound],
+          blocksList: [blockFound],
           stylesList: stylesToCopy,
           configList: configsToCopy,
         };
@@ -721,6 +722,10 @@ export const BuilderProvider: React.FC<{
     moveBlockBackward,
 
     addAsChild,
+
+    // Modo de edición
+    mode,
+    setMode,
   };
 
   return (

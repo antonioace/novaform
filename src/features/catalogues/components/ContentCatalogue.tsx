@@ -28,15 +28,9 @@ function ContentCatalogue() {
   const { createCatalogue, createCatalogueLoading } = useCreateCatalogue();
   const { deleteCatalogue, deleteCatalogueLoading } = useDeleteCatalogue();
 
-  // Cargar catálogos al montar el componente
   useEffect(() => {
     fetchCataloguesByUserId(user?.session?.user?.id || "");
-  }, []);
-
-  // Log para debug de catálogos (evita warning del linter)
-  useEffect(() => {
-    console.log("Catálogos cargados:", catalogues);
-  }, [catalogues]);
+  }, [page]);
 
   // Log para debug de loading states (evita warning del linter)
   useEffect(() => {
@@ -114,18 +108,15 @@ function ContentCatalogue() {
         </div>
       </div>
 
-      {fetchCataloguesLoading ? (
-        <div className="text-center py-4">Cargando catálogos...</div>
-      ) : (
-        <TableCatalogue
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          catalogues={catalogues}
-          page={page}
-          total={total}
-          onPageChange={setPage}
-        />
-      )}
+      <TableCatalogue
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        catalogues={catalogues}
+        page={page}
+        total={total}
+        onPageChange={setPage}
+        loading={fetchCataloguesLoading}
+      />
 
       <CatalogueForm
         open={open}

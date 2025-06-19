@@ -342,9 +342,9 @@ function ContextMenu() {
           );
           if (content) {
             setCopiedContent({
-              blocksList: content.blockList,
+              blocksList: content.blocksList,
               stylesList: content.stylesList,
-              configList: content.configList
+              configList: content.configList,
             });
           }
           hideContextMenu();

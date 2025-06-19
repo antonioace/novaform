@@ -5,6 +5,7 @@ import { useNotification } from "@/contexts/NotificationContext";
 import { useRouter } from "next/router";
 import { Button, TextField, InputAdornment } from "@mui/material";
 import { FiSearch, FiPlus, FiEdit, FiTrash } from "react-icons/fi";
+import { frontendToBackendPage } from "@/features/shared";
 
 // Definimos la interfaz para nuestros datos
 interface User {
@@ -45,7 +46,7 @@ export default function UsersPage() {
       // Preparar parámetros para la API
       const params = {
         ...filters,
-        page: page + 1, // API suele usar paginación basada en 1
+        page: frontendToBackendPage(page), // Conversión automática de paginación
         limit: rowsPerPage,
         sortBy: orderBy,
         sortOrder: order,

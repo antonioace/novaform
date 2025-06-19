@@ -8,8 +8,8 @@ export const useFetchCataloguesByUserId = () => {
   const [catalogues, setCatalogues] = useState<ICatalogueResponse[]>([]);
   const { showSuccess, showError } = useNotification();
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(1);
 
   const fetchCataloguesByUserId = async (
     userId: string
@@ -18,7 +18,7 @@ export const useFetchCataloguesByUserId = () => {
     try {
       const response = await catalogueService.getCataloguesByUserId(
         userId,
-        page,
+        page + 1,
         limit
       );
 

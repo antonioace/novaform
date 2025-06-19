@@ -8,7 +8,11 @@ import { useDeleteProject } from "../hooks/useDeleteProject";
 import { useUpdateProject } from "../hooks/useUpdateProject";
 import { CreateProjectModal } from "../components/CreateProjectModal";
 import { EditProjectModal } from "../components/EditProjectModal";
-import { ICreateProjectDto, IUpdateProjectDto, IProjectResponse } from "../types/interfaces";
+import {
+  ICreateProjectDto,
+  IUpdateProjectDto,
+  IProjectResponse,
+} from "../types/interfaces";
 
 const ProjectPage: React.FC = () => {
   const {
@@ -23,7 +27,8 @@ const ProjectPage: React.FC = () => {
   const { loading: loadingUpdate, updateProject } = useUpdateProject();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<IProjectResponse | null>(null);
+  const [selectedProject, setSelectedProject] =
+    useState<IProjectResponse | null>(null);
 
   useEffect(() => {
     getProjects();
@@ -82,9 +87,11 @@ const ProjectPage: React.FC = () => {
 
       <Stack spacing={2} alignItems="center" className="mt-6">
         <Pagination
-          count={pagination.totalPages}
+          count={Math.ceil(pagination.total / pagination.limit)}
           page={pagination.page || 1}
-          onChange={(_, page) => handlePageChange(page)}
+          onChange={(_, page) => {
+            handlePageChange(page);
+          }}
           disabled={loadingProjects}
           color="primary"
           size="large"

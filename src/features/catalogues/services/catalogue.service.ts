@@ -179,7 +179,7 @@ export class CatalogueService extends BackendService {
     };
 
     const response = await this.get<ICatalogueByFiltersResponse>(
-      `/user/${userId}`, 
+      `/user/${userId}`,
       params
     );
     if (response.success) {

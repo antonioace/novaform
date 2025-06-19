@@ -55,12 +55,10 @@ export const useBlockStyles = (block: Block) => {
 
   // Aplicar estilos formateados
   const elementStyles = {
-    ...formatearEstilos(currentDeviceStyles),
-    position: "relative" as const,
-    cursor: "pointer",
+    ...formatearEstilos(currentDeviceStyles)
   };
 
   return {
     elementStyles,
   };
-}; 
+};

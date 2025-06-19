@@ -9,17 +9,15 @@ const BotonElement: React.FC<BaseElementProps> = ({
   return (
     <button
       {...eventHandlers}
+      onClick={(e) => {
+        e.preventDefault();
+        eventHandlers?.onClick?.(e);
+      }}
       style={{
-        backgroundColor: "#3b82f6",
-        color: "#ffffff",
-        padding: "8px 16px",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
         ...styles,
       }}
     >
-      {config?.config?.boton_text as string || "Botón"}
+      {(config?.config?.boton_text as string) || "Botón"}
     </button>
   );
 };

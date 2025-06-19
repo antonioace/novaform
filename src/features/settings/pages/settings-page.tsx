@@ -6,6 +6,7 @@ import ContentCatalogue from "@/features/catalogues/components/ContentCatalogue"
 import ContentRole from "@/features/role/components/ContentRole";
 import FormBasicUser from "@/features/users/components/FormBasicUser";
 import AdminUser from "@/features/users/components/AdminUser";
+import FileManager from "@/features/file-user/components/FileManager";
 
 function CataloguePages() {
   const router = useRouter();
@@ -27,6 +28,10 @@ function CataloguePages() {
     {
       key: "user",
       label: "Usuarios",
+    },
+    {
+      key: "file-manager",
+      label: "Gestor de archivos",
     },
   ];
 
@@ -52,6 +57,7 @@ function CataloguePages() {
             {activeOption === "role" && <ContentRole />}
             {activeOption === "general" && <FormBasicUser />}
             {activeOption === "user" && <AdminUser />}
+            {activeOption === "file-manager" && <FileManager />}
           </AnimacionEntrada>
         </AnimatePresence>
       </TabContainer>

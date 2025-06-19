@@ -13,6 +13,7 @@ const InputNumeroElement: React.FC<BaseElementProps> = ({
       style={{
         ...styles,
       }}
+      className="input-element-builder"
       placeholder={config?.config?.placeholder as string}
     />
   );

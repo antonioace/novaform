@@ -9,12 +9,22 @@
   --foreground: #171717;
   --editor-width-tabpanel: 290px;
   --editor-width-custom-toolbar: 40px;
+  --input-border: #d1d5db; /* gray-300 */
+  --input-border-hover: #a1a1aa; /* gray-400 */
+  --input-border-focus: #2563eb; /* blue-600 */
+  --input-bg: #fff;
+  --input-bg-focus: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --input-border: #444;
+    --input-border-hover: #888;
+    --input-border-focus: #60a5fa;
+    --input-bg: #18181b;
+    --input-bg-focus: #18181b;
   }
 }
 
@@ -37,4 +47,19 @@ body {
   right: 0;
   height: 2px;
   background: #000;
+}
+
+.template-content-list-modal:hover .button-option-modal {
+  opacity: 1;
+}
+
+.input-element-builder:hover {
+  border: 1px solid var(--input-border-hover);
+}
+
+.input-element-builder:focus {
+  outline: none;
+  border: 1px solid var(--input-border-focus);
+  box-shadow: none; /* elimina el anillo para un efecto más suave   */
+  background: var(--input-bg-focus);
 }

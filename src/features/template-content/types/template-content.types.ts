@@ -3,7 +3,8 @@ export interface TemplateContent {
   name: string;
   description: string;
   pageId: string;
-  content: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  content: any;
   status: number;
   createdAt: string;
   updatedAt: string;
@@ -13,7 +14,8 @@ export interface CreateTemplateContentDto {
   name: string;
   description: string;
   pageId: string;
-  content: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  content: any;
 }
 
 export interface UpdateTemplateContentDto {

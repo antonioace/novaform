@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BaseElementProps } from "./types";
-import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const InputPasswordElement: React.FC<BaseElementProps> = ({
   block,
@@ -10,43 +10,21 @@ const InputPasswordElement: React.FC<BaseElementProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-      }}
-    >
+    <div className="relative w-full">
       <input
         type={showPassword ? "text" : "password"}
-        {...eventHandlers}
-        style={{
-          ...styles,
-        }}
         placeholder={block.name || "Ingrese contraseña"}
-        className="builder-input"
+        style={styles}
+        {...eventHandlers}
+        className="input-element-builder"
       />
       <button
         type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        style={{
-          position: "absolute",
-          right: "8px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          background: "none",
-          border: "none",
-          padding: "4px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        tabIndex={-1}
+        onClick={() => setShowPassword((v) => !v)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 bg-transparent border-none p-1 cursor-pointer"
       >
-        {showPassword ? (
-          <MdVisibilityOff size={20} />
-        ) : (
-          <MdVisibility size={20} />
-        )}
+        {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
       </button>
     </div>
   );

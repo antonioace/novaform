@@ -5,6 +5,7 @@ import { useCreateTemplateContent } from "../hooks/useTemplateContent";
 import { CreateTemplateContentDto } from "../types/template-content.types";
 import { useNotification } from "@/contexts/NotificationContext";
 import { CustomFormTextInput } from "@/components/custom-form";
+import { REGISTER_CONTENT_STATIC } from "@/features/builder/utils/estaticos";
 
 interface CreateTemplateContentModalProps {
   open: boolean;
@@ -16,7 +17,7 @@ interface CreateTemplateContentModalProps {
 
 export const CreateTemplateContentModal: React.FC<
   CreateTemplateContentModalProps
-> = ({ open, onClose, pageId, content }) => {
+> = ({ open, onClose, pageId }) => {
   const { create, loading } = useCreateTemplateContent();
   const { showSuccess, showError } = useNotification();
   const { control, handleSubmit, reset } = useForm<CreateTemplateContentDto>({
@@ -31,7 +32,7 @@ export const CreateTemplateContentModal: React.FC<
       name: data.name,
       description: data.description,
       pageId,
-      content: content,
+      content: REGISTER_CONTENT_STATIC.result,
     });
     if (response?.success) {
       showSuccess("Plantilla creada exitosamente");

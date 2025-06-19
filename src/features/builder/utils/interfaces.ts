@@ -236,7 +236,7 @@ export interface BuilderContextType {
   bloqueActualHover: Block | null;
   setBloqueActualHover: (bloque: Block | null) => void;
   duplicateBlock: (blockId: string) => void;
-  getConfigAndStylesByBlockId: (blockId: string) => { blockList: Block[]; stylesList: BlockStyles[]; configList: BlockConfig[]; } | null;
+  getConfigAndStylesByBlockId: (blockId: string) => { blocksList: Block[]; stylesList: BlockStyles[]; configList: BlockConfig[]; } | null;
 
   // Gestión del menú contextual
   contextMenu: ContextMenuState;
@@ -259,6 +259,10 @@ export interface BuilderContextType {
   moveBlockForward: (blockId: string) => void;
   moveBlockBackward: (blockId: string) => void;
   addAsChild: (blocks: Block[], parentId: string, newChild: Block) => Block[];
+
+  // Modo de edición
+  mode: "edit" | "view";
+  setMode: (mode: "edit" | "view") => void;
 }
 
 export interface IElementBlockProps {

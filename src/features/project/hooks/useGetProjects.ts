@@ -10,7 +10,7 @@ export const useGetProjects = () => {
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState<IProjectResponse[]>([]);
   const [pagination, setPagination] = useState({
-    page: 1,
+    page: 0,
     limit: 6,
     total: 0,
     totalPages: 0,

@@ -12,8 +12,17 @@ interface TableCatalogueProps {
   page: number;
   total: number;
   onPageChange: (page: number) => void;
+  loading: boolean;
 }
-function TableCatalogue({ onEdit, onDelete, catalogues, page, total, onPageChange }: TableCatalogueProps) {
+function TableCatalogue({
+  onEdit,
+  onDelete,
+  catalogues,
+  page,
+  total,
+  onPageChange,
+  loading
+}: TableCatalogueProps) {
   const columns: Column[] = [
     {
       id: "name",
@@ -67,10 +76,13 @@ function TableCatalogue({ onEdit, onDelete, catalogues, page, total, onPageChang
         data={catalogues}
         totalItems={total}
         page={page}
-        rowsPerPage={10}
-        onPageChange={onPageChange}
+        rowsPerPage={1}
+        onPageChange={(page) => {
+          onPageChange(page);
+        }}
         onRowsPerPageChange={() => {}}
         onSortChange={() => {}}
+        loading={loading}
       />
     </div>
   );
