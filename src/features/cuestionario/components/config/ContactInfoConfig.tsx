@@ -119,7 +119,7 @@ const ContactInfoConfig: React.FC<ContactInfoConfigProps> = ({
     },
   ];
   React.useEffect(() => {
-    setInitialData(selectedQuestion?.config as ContactInfoCfg);
+    setInitialData(selectedQuestion?.config as unknown as ContactInfoCfg);
   }, [selectedQuestion?.id]);
   return (
     <div className=" p-2 flex flex-col grow overflow-y-auto mb-[80px]">

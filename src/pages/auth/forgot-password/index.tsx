@@ -12,7 +12,7 @@ interface ForgotPasswordFormData {
 
 export default function ForgotPasswordPage() {
   const { handleForgotPassword, forgotPasswordLoading } = useForgotPassword();
-  
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { control, handleSubmit, reset } = useForm<any>({
     defaultValues: {
@@ -33,25 +33,28 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f9fa]">
-      <div className="container mx-auto">
+      <div className="w-full h-full ">
         <div className="flex flex-col lg:flex-row rounded-xl overflow-hidden shadow-lg">
           {/* Formulario */}
           <div className="w-full lg:w-1/2 bg-white p-8 md:p-12">
             <div className="flex items-center mb-8">
-              <NovaFormLogo
-                estilos={{
-                  width: "100px",
-                  height: "100px",
-                }}
-              />
+              <div
+                className="flex flex-row justify-start items-center w-[100%]
+                max-w-[190px] h-[100px] bg-white
+            
+                "
+              >
+                <NovaFormLogo />
+              </div>
             </div>
 
             <h1 className="text-2xl font-bold text-center mb-4 text-[#0a1929]">
               Recuperar Contraseña
             </h1>
-            
+
             <p className="text-center text-gray-600 mb-8">
-              Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+              Ingresa tu correo electrónico y te enviaremos un enlace para
+              restablecer tu contraseña.
             </p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -80,7 +83,9 @@ export default function ForgotPasswordPage() {
                 }}
                 className="w-full bg-[#0a1929] text-white py-3 rounded-md font-semibold hover:bg-[#1a365d] transition-colors"
               >
-                {forgotPasswordLoading ? "Enviando..." : "Enviar Enlace de Recuperación"}
+                {forgotPasswordLoading
+                  ? "Enviando..."
+                  : "Enviar Enlace de Recuperación"}
               </Button>
             </form>
 
@@ -123,4 +128,4 @@ export default function ForgotPasswordPage() {
 
 ForgotPasswordPage.getLayout = function getLayout(page: React.ReactNode) {
   return <AuthLayoutSupabase>{page}</AuthLayoutSupabase>;
-}; 
+};
