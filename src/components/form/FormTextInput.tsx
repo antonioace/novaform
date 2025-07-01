@@ -1,9 +1,14 @@
-import { Controller, ControllerProps, FieldValues, Path } from "react-hook-form";
-import { TextField, TextFieldProps } from "@mui/material";
+import {
+  Controller,
+  ControllerProps,
+  FieldValues,
+  Path,
+} from "react-hook-form";
+import { TextField, TextFieldProps, SxProps, Theme } from "@mui/material";
 
 interface FormTextInputProps<T extends FieldValues = FieldValues>
   extends Pick<ControllerProps<T>, "rules" | "control">,
-    Omit<TextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'> {
+    Omit<TextFieldProps, "name" | "value" | "onChange" | "onBlur"> {
   fieldName: Path<T>;
   label?: string;
   required?: boolean;
@@ -15,6 +20,9 @@ interface FormTextInputProps<T extends FieldValues = FieldValues>
   fullWidth?: boolean;
   size?: "small" | "medium";
   variant?: "outlined" | "filled" | "standard";
+  labelClassName?: string;
+  labelStyle?: React.CSSProperties;
+  sx?: SxProps<Theme>;
 }
 
 export const FormTextInput = <T extends FieldValues = FieldValues>({
@@ -31,6 +39,9 @@ export const FormTextInput = <T extends FieldValues = FieldValues>({
   fullWidth = true,
   size = "medium",
   variant = "outlined",
+  sx,
+  labelClassName,
+  labelStyle,
   ...inputProps
 }: FormTextInputProps<T>) => {
   return (
@@ -40,15 +51,29 @@ export const FormTextInput = <T extends FieldValues = FieldValues>({
         control={control}
         rules={rules}
         render={({ field, fieldState }) => (
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-1">
+            {/* Label arriba estilo antd */}
+            {label && (
+              <label
+                htmlFor={field.name}
+                className={`text-sm font-medium text-gray-700 mb-1 ${
+                  required
+                    ? "after:content-['*'] after:text-red-500 after:ml-1"
+                    : ""
+                } ${disabled ? "text-gray-400" : ""} ${labelClassName}`}
+                style={labelStyle}
+              >
+                {label}
+              </label>
+            )}
+
+            {/* TextField sin label */}
             <TextField
               id={field.name}
               {...field}
               value={field?.value || null}
               type={type}
-              label={label}
               placeholder={placeholder}
-              required={required}
               error={!!fieldState.error}
               helperText={
                 fieldState.error ? fieldState.error.message : helpText
@@ -58,6 +83,23 @@ export const FormTextInput = <T extends FieldValues = FieldValues>({
               fullWidth={fullWidth}
               size={size}
               variant={variant}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: disabled ? "#f5f5f5" : "white",
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#021642",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#021642",
+                    borderWidth: "2px",
+                  },
+                },
+                "& .MuiFormHelperText-root": {
+                  marginLeft: 0,
+                  fontSize: "0.75rem",
+                },
+                ...sx,
+              }}
               {...inputProps}
             />
           </div>

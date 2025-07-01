@@ -3,8 +3,13 @@ import React from "react";
 export interface NovaFormLogoProps {
   estilos?: React.CSSProperties;
   hideTitulo?: boolean;
+  onClick?: () => void;
 }
-function NovaFormLogo({ estilos = {}, hideTitulo = false }: NovaFormLogoProps) {
+function NovaFormLogo({
+  estilos = {},
+  hideTitulo = false,
+  onClick,
+}: NovaFormLogoProps) {
   return (
     <>
       {/*?xml version="1.0" encoding="UTF-8"?*/}
@@ -16,6 +21,7 @@ function NovaFormLogo({ estilos = {}, hideTitulo = false }: NovaFormLogoProps) {
         style={estilos}
         width={estilos.width}
         height={estilos.height}
+        onClick={onClick}
       >
         <defs>
           <style

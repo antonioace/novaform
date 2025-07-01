@@ -1,13 +1,14 @@
 import { TIPOS_BLOQUES } from "./tiposElementos";
 import { IPage } from "@/features/page/types";
-import { 
-  INPUT_CONFIG_KEYS, 
-  BOTON_CONFIG_KEYS, 
-  TEXTO_CONFIG_KEYS, 
-  IMAGEN_CONFIG_KEYS, 
-  FORMULARIO_CONFIG_KEYS, 
-  CONTENEDOR_CONFIG_KEYS 
-} from './configKeys';
+import {
+  INPUT_CONFIG_KEYS,
+  BOTON_CONFIG_KEYS,
+  TEXTO_CONFIG_KEYS,
+  IMAGEN_CONFIG_KEYS,
+  FORMULARIO_CONFIG_KEYS,
+  CONTENEDOR_CONFIG_KEYS,
+  CUENTIONARIO_CONFIG_KEYS,
+} from "./configKeys";
 
 export enum DISPOSITIVOS {
   DESKTOP = "DESKTOP",
@@ -186,6 +187,12 @@ export interface BlockConfig {
       duplicate_id: string;
     };
 
+    // Configuración de cuestionarios
+    [CUENTIONARIO_CONFIG_KEYS.name]?: string;
+    [CUENTIONARIO_CONFIG_KEYS.description]?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [CUENTIONARIO_CONFIG_KEYS.questions]?: any;
+
     // Configuraciones específicas del tipo de bloque
     [key: string]: unknown;
   };
@@ -236,7 +243,11 @@ export interface BuilderContextType {
   bloqueActualHover: Block | null;
   setBloqueActualHover: (bloque: Block | null) => void;
   duplicateBlock: (blockId: string) => void;
-  getConfigAndStylesByBlockId: (blockId: string) => { blocksList: Block[]; stylesList: BlockStyles[]; configList: BlockConfig[]; } | null;
+  getConfigAndStylesByBlockId: (blockId: string) => {
+    blocksList: Block[];
+    stylesList: BlockStyles[];
+    configList: BlockConfig[];
+  } | null;
 
   // Gestión del menú contextual
   contextMenu: ContextMenuState;

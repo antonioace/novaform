@@ -1,11 +1,10 @@
 import { Controller, ControllerProps } from "react-hook-form";
-import { TextField } from "@mui/material";
+import { TextField, SxProps, Theme } from "@mui/material";
 
 interface FormNumberInputProps
   extends Pick<ControllerProps, "rules" | "control"> {
   fieldName: string;
   label?: string;
-
   required?: boolean;
   helpText?: string;
   className?: string;
@@ -17,6 +16,7 @@ interface FormNumberInputProps
   fullWidth?: boolean;
   size?: "small" | "medium";
   variant?: "outlined" | "filled" | "standard";
+  sx?: SxProps<Theme>;
 }
 
 export const FormNumberInput = ({
@@ -35,6 +35,7 @@ export const FormNumberInput = ({
   fullWidth = true,
   size = "medium",
   variant = "outlined",
+  sx,
   ...inputProps
 }: FormNumberInputProps) => {
   return (
@@ -44,18 +45,29 @@ export const FormNumberInput = ({
         control={control}
         rules={rules}
         render={({ field, fieldState }) => (
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-1">
+            {/* Label arriba estilo antd */}
+            {label && (
+              <label 
+                htmlFor={field.name}
+                className={`text-sm font-medium text-gray-700 mb-1 ${
+                  required ? "after:content-['*'] after:text-red-500 after:ml-1" : ""
+                } ${disabled ? "text-gray-400" : ""}`}
+              >
+                {label}
+              </label>
+            )}
+            
+            {/* TextField sin label */}
             <TextField
               id={field.name}
-              value={field?.value || null}
+              value={field?.value || ""}
               onChange={(e) => {
                 const value = e.target.value ? parseFloat(e.target.value) : "";
                 field.onChange(value);
               }}
               type="number"
-              label={label}
               placeholder={placeholder}
-              required={required}
               error={!!fieldState.error}
               helperText={
                 fieldState.error ? fieldState.error.message : helpText
@@ -66,6 +78,23 @@ export const FormNumberInput = ({
               fullWidth={fullWidth}
               size={size}
               variant={variant}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: disabled ? '#f5f5f5' : 'white',
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#021642',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#021642',
+                    borderWidth: '2px',
+                  },
+                },
+                '& .MuiFormHelperText-root': {
+                  marginLeft: 0,
+                  fontSize: '0.75rem',
+                },
+                ...sx,
+              }}
               {...inputProps}
             />
           </div>

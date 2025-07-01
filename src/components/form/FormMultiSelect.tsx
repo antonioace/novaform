@@ -1,12 +1,13 @@
 import { Controller, ControllerProps } from "react-hook-form";
 import {
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   FormHelperText,
   Chip,
   Box,
+  SxProps,
+  Theme,
 } from "@mui/material";
 
 interface FormMultiSelectProps
@@ -18,13 +19,13 @@ interface FormMultiSelectProps
   className?: string;
   disabled?: boolean;
   placeholder?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: any[];
+  options: Record<string, string | number>[];
   optionLabel: string;
   optionValue: string;
   fullWidth?: boolean;
   size?: "small" | "medium";
   variant?: "outlined" | "filled" | "standard";
+  sx?: SxProps<Theme>;
 }
 
 export const FormMultiSelect = ({
@@ -43,6 +44,7 @@ export const FormMultiSelect = ({
   fullWidth = true,
   size = "medium",
   variant = "outlined",
+  sx,
   ...inputProps
 }: FormMultiSelectProps) => {
   return (
@@ -52,59 +54,87 @@ export const FormMultiSelect = ({
         control={control}
         rules={rules}
         render={({ field, fieldState }) => (
-          <FormControl
-            fullWidth={fullWidth}
-            error={!!fieldState.error}
-            size={size}
-            variant={variant}
-            disabled={disabled}
-            className={className}
-          >
-            <InputLabel id={`${field.name}-label`} required={required}>
-              {label}
-            </InputLabel>
-            <Select
-              labelId={`${field.name}-label`}
-              id={field.name}
-              {...field}
-              value={field?.value || []}
-              multiple
-              label={label}
-              displayEmpty={!!placeholder}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {(selected as any[])?.map((value) => {
-                    const option = options.find(
-                      (opt) => opt[optionValue] === value
-                    );
-                    return (
-                      <Chip
-                        key={value}
-                        label={option ? option[optionLabel] : value}
-                      />
-                    );
-                  })}
-                </Box>
-              )}
-              {...inputProps}
-            >
-              {placeholder && (
-                <MenuItem value="" disabled>
-                  {placeholder}
-                </MenuItem>
-              )}
-              {options.map((option) => (
-                <MenuItem key={option[optionValue]} value={option[optionValue]}>
-                  {option[optionLabel]}
-                </MenuItem>
-              ))}
-            </Select>
-            {(fieldState.error || helpText) && (
-              <FormHelperText>
-                {fieldState.error ? fieldState.error.message : helpText}
-              </FormHelperText>
+          <div className="flex flex-col space-y-1">
+            {/* Label arriba estilo antd */}
+            {label && (
+              <label 
+                htmlFor={field.name}
+                className={`text-sm font-medium text-gray-700 mb-1 ${
+                  required ? "after:content-['*'] after:text-red-500 after:ml-1" : ""
+                } ${disabled ? "text-gray-400" : ""}`}
+              >
+                {label}
+              </label>
             )}
-          </FormControl>
+            
+            {/* FormControl sin InputLabel */}
+            <FormControl
+              fullWidth={fullWidth}
+              error={!!fieldState.error}
+              size={size}
+              variant={variant}
+              disabled={disabled}
+              className={className}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: disabled ? '#f5f5f5' : 'white',
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#021642',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#021642',
+                    borderWidth: '2px',
+                  },
+                },
+                '& .MuiFormHelperText-root': {
+                  marginLeft: 0,
+                  fontSize: '0.75rem',
+                },
+                ...sx,
+              }}
+            >
+              <Select
+                id={field.name}
+                {...field}
+                value={field?.value || []}
+                multiple
+                displayEmpty={!!placeholder}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {(selected as (string | number)[])?.map((value) => {
+                      const option = options.find(
+                        (opt) => opt[optionValue] === value
+                      );
+                      return (
+                        <Chip
+                          key={String(value)}
+                          label={option ? String(option[optionLabel]) : String(value)}
+                          size="small"
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+                {...inputProps}
+              >
+                {placeholder && (
+                  <MenuItem value="" disabled>
+                    <span className="text-gray-400">{placeholder}</span>
+                  </MenuItem>
+                )}
+                {options.map((option) => (
+                  <MenuItem key={String(option[optionValue])} value={option[optionValue]}>
+                    {String(option[optionLabel])}
+                  </MenuItem>
+                ))}
+              </Select>
+              {(fieldState.error || helpText) && (
+                <FormHelperText>
+                  {fieldState.error ? fieldState.error.message : helpText}
+                </FormHelperText>
+              )}
+            </FormControl>
+          </div>
         )}
       />
     </div>

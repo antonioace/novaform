@@ -12,8 +12,8 @@ import {
   MdShortText,
   MdFormatColorText,
   MdFileUpload,
-  MdQuiz,
   MdAssignment,
+  MdAssignmentAdd,
 } from "react-icons/md";
 import { TIPOS_BLOQUES } from "./tiposElementos";
 
@@ -51,11 +51,13 @@ export const configuracionByElement: ConfiguracionByElement[] = [
       },
       {
         type: TIPOS_BLOQUES.CONTENEDOR,
-        icon: <MdOutlineSmartButton
+        icon: (
+          <MdOutlineSmartButton
             style={{ fontSize: "20px", color: "#232323" }}
-          />,
+          />
+        ),
         label: "Contenedor",
-      }
+      },
     ],
   },
   {
@@ -131,14 +133,16 @@ export const configuracionByElement: ConfiguracionByElement[] = [
     elements: [
       {
         type: TIPOS_BLOQUES.CUESTIONARIO,
-        icon: <MdQuiz style={{ fontSize: "20px", color: "#232323" }} />,
-        label: "Componente",
+        icon: (
+          <MdAssignmentAdd style={{ fontSize: "20px", color: "#232323" }} />
+        ),
+        label: "Cuestionario",
       },
       {
         type: TIPOS_BLOQUES.FORMULARIO,
         icon: <MdAssignment style={{ fontSize: "20px", color: "#232323" }} />,
         label: "Formulario",
-      }
+      },
     ],
   },
 ];

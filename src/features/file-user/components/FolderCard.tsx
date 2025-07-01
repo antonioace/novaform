@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {  FaEllipsisV, FaTrash, FaLink } from "react-icons/fa";
-import { Menu, MenuItem, IconButton } from "@mui/material";
+import { FaEllipsisV, FaTrash, FaLink } from "react-icons/fa";
+import { Menu, MenuItem, IconButton, Tooltip } from "@mui/material";
 import FileTypeIcon from "./FileTypeIcon";
 import { FileType } from "../types/file-user.types";
 
@@ -109,7 +109,9 @@ const FolderCard: React.FC<FolderCardProps> = ({
       </div>
       {/* Nombre y detalles */}
       <div>
-        <h3 className="font-semibold text-lg">{name}</h3>
+        <Tooltip title={name} placement="top">
+          <h3 className="font-semibold text-lg truncate">{name}</h3>
+        </Tooltip>
         <p className="text-gray-500 text-sm">
           {size} · {files} archivos
         </p>

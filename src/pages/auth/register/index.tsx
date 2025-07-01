@@ -10,6 +10,7 @@ import {
 import { Button } from "@mui/material";
 import { AuthLayoutSupabase } from "@/components/layout";
 import { RegisterData } from "@/features/auth/types";
+import NovaFormLogo from "@/features/shared/components/theme/NovaFormLogo";
 
 interface FormData {
   name: string;
@@ -46,15 +47,19 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f9fa]">
-      <div className="container mx-auto px-4">
+      <div className="w-full h-full ">
         <div className="flex flex-col lg:flex-row rounded-xl overflow-hidden shadow-lg">
           {/* Formulario */}
           <div className="w-full lg:w-1/2 bg-white p-8 md:p-12">
-            <div className="flex items-center mb-8">
-              <div className="w-10 h-10 rounded-full bg-[#0a1929] flex items-center justify-center text-white font-bold text-xl mr-3">
-                L
+            <div className="flex items-center mb-8 justify-center">
+              <div
+                className="flex flex-row justify-start items-center w-[100%]
+                max-w-[190px] h-[100px] bg-white
+            
+                "
+              >
+                <NovaFormLogo />
               </div>
-              <span className="text-xl font-bold text-[#0a1929]">NovaForm</span>
             </div>
 
             <h1 className="text-2xl font-bold text-center mb-8 text-[#0a1929]">

@@ -84,6 +84,8 @@ const ConfigContainer: React.FC<ConfigContainerProps> = ({ block }) => {
             onChange={handleConfigChange}
           />
         );
+      case TIPOS_BLOQUES.CUESTIONARIO:
+        return <div>Cuestionario</div>;
       default:
         return (
           <div className="p-4 text-gray-500">

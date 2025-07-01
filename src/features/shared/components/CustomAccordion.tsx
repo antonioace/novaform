@@ -57,19 +57,21 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         </div>
       </div>
 
-      <div
-        style={{
-          ...styles.content,
-          maxHeight: isOpen ? "500px" : "0",
-          opacity: isOpen ? 1 : 0,
-          visibility: isOpen ? "visible" : "hidden",
-        }}
-        className={`transition-all duration-300 ease-in-out  ${
-          className.content || ""
-        }`}
-      >
-        {children}
-      </div>
+      {isOpen && (
+        <div
+          style={{
+            ...styles.content,
+            maxHeight: isOpen ? "500px" : "0",
+            opacity: isOpen ? 1 : 0,
+            visibility: isOpen ? "visible" : "hidden",
+          }}
+          className={`transition-all duration-300 ease-in-out  ${
+            className.content || ""
+          }`}
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 };

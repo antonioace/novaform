@@ -21,7 +21,7 @@ function TabContainer({
   const handleButtonClick = (key: string) => {
     onOptionChange(key);
   };
-  const classNameVertical = "flex flex-row max-w-full flex-wrap gap-2 mb-8";
+  const classNameVertical = "flex flex-row max-w-full gap-2 mb-8";
   const classNameHorizontal =
     "flex flex-col max-w-[300px] flex-wrap gap-5 mb-8 ";
   const classNameContainerVertical = "p-5 h-full flex flex-col";
@@ -36,7 +36,7 @@ function TabContainer({
               : classNameContainerHorizontal
           }
         >
-          <div>
+          <div className="w-full overflow-x-auto">
             <div
               className={
                 orientation === "vertical"

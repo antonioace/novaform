@@ -1,9 +1,5 @@
-import {
-  AiFillHome,
-  AiFillSetting,
-  AiOutlineBuild,
-  AiOutlineProject,
-} from "react-icons/ai";
+import { AiFillHome, AiFillSetting, AiOutlineProject } from "react-icons/ai";
+import { BsFileText } from "react-icons/bs";
 
 export interface NavigationItem {
   name: string;
@@ -31,15 +27,17 @@ export const mainNavigation: NavigationSection[] = [
         href: "/dashboard/settings",
         icon: AiFillSetting,
       },
-      {
-        name: "Builder",
-        href: "/dashboard/builder",
-        icon: AiOutlineBuild,
-      },
+
       {
         name: "Proyectos",
         href: "/dashboard/project",
         icon: AiOutlineProject,
+      },
+
+      {
+        name: "Cuestionarios",
+        href: "/dashboard/cuestionario/list",
+        icon: BsFileText,
       },
     ],
   },

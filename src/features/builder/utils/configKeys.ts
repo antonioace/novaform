@@ -45,6 +45,13 @@ export const CONTENEDOR_CONFIG_KEYS = {
   duplicate_config: 'contenedot_is_duplicate_config',
 } as const;
 
+export const CUENTIONARIO_CONFIG_KEYS = {
+  name: 'cuestionario_name',
+  description: 'cuestionario_description',
+  questions: 'cuestionario_questions',
+
+} as const;
+
 // Mapeo de tipos de bloques a sus claves de configuración
 export const BLOCK_CONFIG_KEYS = {
   [TIPOS_BLOQUES.INPUT_TEXTO]: INPUT_CONFIG_KEYS,

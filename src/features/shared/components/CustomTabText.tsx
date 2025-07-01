@@ -14,7 +14,7 @@ const CustomTabText = ({ text, active, onClick }) => {
       {active ? (
         <motion.div className="underline" layoutId="underline" />
       ) : null}
-      <button>{text}</button>
+      <button className="whitespace-nowrap">{text}</button>
     </motion.div>
   );
 };

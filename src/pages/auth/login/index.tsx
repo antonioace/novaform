@@ -33,21 +33,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f5f9fa]">
+    <div className="min-h-screen flex items-center justify-center ">
       <div className="container mx-auto ">
-        <div className="flex flex-col lg:flex-row rounded-xl overflow-hidden shadow-lg">
+        <div className="flex flex-col lg:flex-row rounded-xl overflow-hidden  justify-center items-center">
           {/* Formulario */}
-          <div className="w-full lg:w-1/2 bg-white p-8 md:p-12">
-            <div className="flex items-center mb-8">
-              <NovaFormLogo
-                estilos={{
-                  width: "100px",
-                  height: "100px",
-                }}
-              />
+          <div className="w-full  md:w-1/2   bg-white p-8 md:p-12">
+            <div className="flex items-center mb-5 justify-center">
+              <div
+                className="flex flex-row justify-start items-center w-[100%]
+                max-w-[190px] h-[100px] bg-white
+            
+                "
+              >
+                <NovaFormLogo />
+              </div>
             </div>
 
-            <h1 className="text-2xl font-bold text-center mb-8 text-[#0a1929]">
+            <h1 className="text-2xl font-bold text-center mb-5 text-[#0a1929]">
               Iniciar Sesión
             </h1>
 
@@ -136,17 +138,6 @@ export default function LoginPage() {
                   <FaGoogle className="text-[#2d3748]" />
                 </button>
               </div>
-            </div>
-          </div>
-
-          {/* Ilustración */}
-          <div className="hidden lg:block lg:w-1/2 bg-[#0a1929] p-12 relative">
-            <div className="w-full h-full flex items-center justify-center">
-              <img
-                src="https://cdn.pixabay.com/photo/2021/09/26/12/42/remote-work-6656979_1280.svg"
-                alt="Ilustración de inicio de sesión"
-                className="max-w-full max-h-full opacity-90"
-              />
             </div>
           </div>
         </div>
