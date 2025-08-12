@@ -387,20 +387,6 @@ const StylePanel: React.FC<StylePanelProps> = ({ blockId }) => {
     handleStyleUpdate(property, value);
   };
 
-  const handleSizeChangeMultiple = (updates: Record<string, string>) => {
-    setSizeConfig((prev) => ({ ...prev, ...updates }));
-
-    // Aplicar todas las actualizaciones al contexto de una vez
-    const currentStyles = blockStyles?.styles[dispositivoActual] || {};
-    const newStyles = {
-      ...currentStyles,
-      ...updates,
-    };
-
-    updateBlockStyles(blockId, {
-      [dispositivoActual]: newStyles,
-    });
-  };
 
   const handlePositionChange = (property: string, value: string) => {
     setPositionConfig((prev) => ({ ...prev, [property]: value }));
@@ -475,30 +461,7 @@ const StylePanel: React.FC<StylePanelProps> = ({ blockId }) => {
     setCustomProperties(properties);
   };
 
-  // Función para eliminar múltiples propiedades de los estilos
-  const handleRemoveStyleProperties = (propertiesToRemove: string[]) => {
-    // Crear nuevo objeto de estilos sin las propiedades especificadas
-    const newStyles = { ...currentStyles };
-
-    propertiesToRemove.forEach((property) => {
-      delete newStyles[property];
-    });
-
-    // Actualizar el contexto con los estilos modificados
-    updateBlockStyles(blockId, {
-      [dispositivoActual]: newStyles,
-    });
-
-    // Si alguna de las propiedades eliminadas era personalizada, actualizar el estado
-    const updatedCustomProperties = customProperties.filter(
-      (prop) => !propertiesToRemove.includes(prop.property)
-    );
-
-    if (updatedCustomProperties.length !== customProperties.length) {
-      setCustomProperties(updatedCustomProperties);
-    }
-  };
-
+  
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Pestañas */}
@@ -569,7 +532,6 @@ const StylePanel: React.FC<StylePanelProps> = ({ blockId }) => {
                       layoutConfig={layoutConfig}
                       onLayoutChange={handleLayoutChange}
                       onLayoutChangeMultiple={handleLayoutChangeMultiple}
-                      onRemoveProperties={handleRemoveStyleProperties}
                     />
                   );
                 case "SizeSection":
@@ -578,7 +540,6 @@ const StylePanel: React.FC<StylePanelProps> = ({ blockId }) => {
                       key="size"
                       sizeConfig={sizeConfig}
                       onSizeChange={handleSizeChange}
-                      onSizeChangeMultiple={handleSizeChangeMultiple}
                     />
                   );
                 case "PositionSection":
