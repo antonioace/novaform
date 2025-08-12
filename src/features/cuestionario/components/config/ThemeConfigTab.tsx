@@ -36,7 +36,6 @@ const ThemeConfigTab = () => {
     handlePositionChange,
     handleEffectsChange,
     handleCustomPropertyChange,
-    handleRemoveStyleProperties,
     resetTheme,
   } = useThemeConfig();
 
@@ -81,9 +80,7 @@ const ThemeConfigTab = () => {
           onLayoutChangeMultiple={(updates) =>
             handleLayoutChangeMultiple(element, updates)
           }
-          onRemoveProperties={(properties) =>
-            handleRemoveStyleProperties(element, properties)
-          }
+    
         />
 
         {/* Size Section */}

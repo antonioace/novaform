@@ -355,21 +355,7 @@ export const useThemeConfig = () => {
     updateGlobalThemeConfig(newThemeConfig);
   };
 
-  const handleRemoveStyleProperties = (element: keyof QuestionThemeConfig, propertiesToRemove: string[]) => {
-    const newThemeConfig = { ...themeConfig };
-    
-    // Crear un nuevo objeto layout sin las propiedades especificadas
-    const currentLayout = newThemeConfig[element].layout;
-    const newLayout = Object.fromEntries(
-      Object.entries(currentLayout).filter(([key]) => !propertiesToRemove.includes(key))
-    );
-    newThemeConfig[element] = {
-      ...newThemeConfig[element],
-      layout: newLayout
-    };
-    
-    updateGlobalThemeConfig(newThemeConfig);
-  };
+
 
   const applyTheme = () => {
     console.log("Aplicando tema completo:", themeConfig);
@@ -393,7 +379,6 @@ export const useThemeConfig = () => {
     handlePositionChange,
     handleEffectsChange,
     handleCustomPropertyChange,
-    handleRemoveStyleProperties,
     applyTheme,
     resetTheme
   };
