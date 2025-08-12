@@ -25,6 +25,7 @@ interface FormSelectProps extends Pick<ControllerProps, "rules" | "control"> {
   sx?: SxProps<Theme>;
   labelStyle?: React.CSSProperties;
   labelClassName?: string;
+  onChange?: (value: string | number) => void;
 }
 
 export const FormSelect = ({
@@ -46,6 +47,7 @@ export const FormSelect = ({
   sx,
   labelStyle,
   labelClassName,
+  onChange,
   ...inputProps
 }: FormSelectProps) => {
   return (
@@ -103,6 +105,12 @@ export const FormSelect = ({
                 value={field?.value || ""}
                 displayEmpty={!!placeholder}
                 {...inputProps}
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (onChange) {
+                    onChange(e.target.value as string | number);
+                  }
+                }}
               >
                 {placeholder && (
                   <MenuItem value="" disabled>

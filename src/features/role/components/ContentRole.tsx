@@ -44,9 +44,7 @@ function ContentRole() {
     }
   };
 
-  const handleAddPermission = (role: IRoleResponse) => {
-    console.log("Añadiendo permisos al rol:", role);
-  };
+
 
   return (
     <div className="flex flex-col gap-4">
@@ -71,7 +69,7 @@ function ContentRole() {
       <TableRole
         onEdit={handleEdit}
         onDelete={handleDelete}
-        onAddPermission={handleAddPermission}
+      
       />
 
       <RoleForm

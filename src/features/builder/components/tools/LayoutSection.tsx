@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
+import { Slider, ClickAwayListener } from "@mui/material";
 import UnitSelector from "./UnitSelector";
 import { useUnitValue } from "../../hooks/useUnitValue";
 
@@ -23,14 +24,12 @@ interface LayoutSectionProps {
   };
   onLayoutChange: (property: string, value: string) => void;
   onLayoutChangeMultiple?: (updates: Record<string, string>) => void;
-  onRemoveProperties?: (propertiesToRemove: string[]) => void;
 }
 
 const LayoutSection: React.FC<LayoutSectionProps> = ({
   layoutConfig,
   onLayoutChange,
   onLayoutChangeMultiple,
-  onRemoveProperties,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { parseValue, combineValue } = useUnitValue();
@@ -41,6 +40,14 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
   );
   const [marginUnit, setMarginUnit] = useState("px");
   const [paddingUnit, setPaddingUnit] = useState("px");
+
+  // Estados para controlar el slider único
+  const [activeField, setActiveField] = useState<{
+    property: string;
+    value: number;
+    onChange: (property: string, value: string) => void;
+    unit: string;
+  } | null>(null);
 
   const displayOptions = [
     { value: "block", label: "Bloque" },
@@ -180,12 +187,84 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
     }
   };
 
+  // Función para abrir el slider
+  const handleFieldClick = (
+    property: string,
+    value: number,
+    onChange: (property: string, value: string) => void,
+    unit: string
+  ) => {
+    setActiveField({ property, value, onChange, unit });
+  };
+
+  // Función para cerrar el slider
+  const handleCloseSlider = () => {
+    setActiveField(null);
+  };
+
+  // Componente de input simple que activa el slider
+  const ClickableInput = ({ 
+    property, 
+    value, 
+    onChange, 
+    unit,
+    placeholder = "0" 
+  }: {
+    property: string;
+    value: number;
+    onChange: (property: string, value: string) => void;
+    unit: string;
+    placeholder?: string;
+  }) => {
+    const isActive = activeField?.property === property;
+
+    return (
+      <input
+        type="number"
+        placeholder={placeholder}
+        value={value}
+        className={`text-xs text-center border rounded px-1 py-1 w-full cursor-pointer transition-colors ${
+          isActive 
+            ? 'border-blue-500 bg-blue-50' 
+            : 'border-gray-300 hover:bg-blue-50'
+        }`}
+        onChange={(e) => onChange(property, e.target.value)}
+        onClick={() => handleFieldClick(property, value, onChange, unit)}
+      />
+    );
+  };
+
+  // Efecto para actualizar el valor activo cuando el campo cambia externamente
+  React.useEffect(() => {
+    if (activeField) {
+      const currentValue = (() => {
+        switch (activeField.property) {
+          case 'marginTop': return parseValue(layoutConfig.marginTop || "0px").number;
+          case 'marginLeft': return parseValue(layoutConfig.marginLeft || "0px").number;
+          case 'marginRight': return parseValue(layoutConfig.marginRight || "0px").number;
+          case 'marginBottom': return parseValue(layoutConfig.marginBottom || "0px").number;
+          case 'margin': return parseValue(layoutConfig.margin || "0px").number;
+          case 'paddingTop': return parseValue(layoutConfig.paddingTop || "0px").number;
+          case 'paddingLeft': return parseValue(layoutConfig.paddingLeft || "0px").number;
+          case 'paddingRight': return parseValue(layoutConfig.paddingRight || "0px").number;
+          case 'paddingBottom': return parseValue(layoutConfig.paddingBottom || "0px").number;
+          case 'padding': return parseValue(layoutConfig.padding || "0px").number;
+          default: return activeField.value;
+        }
+      })();
+
+      if (currentValue !== activeField.value) {
+        setActiveField({ ...activeField, value: currentValue });
+      }
+    }
+  }, [layoutConfig, activeField, parseValue]);
+
   const gapUnitValue = parseValue(layoutConfig.gap || "0px").unit;
   return (
     <div className="border-b border-gray-200">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-3 text-leftansition-colors"
+        className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 transition-colors"
       >
         <span className="text-[#232323] text-xs cursor-pointer font-semibold">
           Diseño
@@ -336,58 +415,37 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
                 <div className="bg-gray-100 rounded p-3">
                   <div className="grid grid-cols-3 gap-1 items-center">
                     <div></div>
-                    <input
-                      type="number"
-                      placeholder="0"
+                    <ClickableInput
+                      property="marginTop"
                       value={parseValue(layoutConfig.marginTop || "0px").number}
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handleMarginChange("marginTop", e.target.value)
-                      }
+                      onChange={handleMarginChange}
+                      unit={marginUnit}
                     />
                     <div></div>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.marginLeft || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handleMarginChange("marginLeft", e.target.value)
-                      }
+                    <ClickableInput
+                      property="marginLeft"
+                      value={parseValue(layoutConfig.marginLeft || "0px").number}
+                      onChange={handleMarginChange}
+                      unit={marginUnit}
                     />
-                    <input
-                      type="number"
-                      placeholder="0"
+                    <ClickableInput
+                      property="margin"
                       value={parseValue(layoutConfig.margin || "0px").number}
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handleMarginChange("margin", e.target.value)
-                      }
+                      onChange={handleMarginChange}
+                      unit={marginUnit}
                     />
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.marginRight || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handleMarginChange("marginRight", e.target.value)
-                      }
+                    <ClickableInput
+                      property="marginRight"
+                      value={parseValue(layoutConfig.marginRight || "0px").number}
+                      onChange={handleMarginChange}
+                      unit={marginUnit}
                     />
                     <div></div>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.marginBottom || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handleMarginChange("marginBottom", e.target.value)
-                      }
+                    <ClickableInput
+                      property="marginBottom"
+                      value={parseValue(layoutConfig.marginBottom || "0px").number}
+                      onChange={handleMarginChange}
+                      unit={marginUnit}
                     />
                     <div></div>
                   </div>
@@ -414,60 +472,37 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
                 <div className="bg-blue-50 rounded p-3">
                   <div className="grid grid-cols-3 gap-1 items-center">
                     <div></div>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.paddingTop || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handlePaddingChange("paddingTop", e.target.value)
-                      }
+                    <ClickableInput
+                      property="paddingTop"
+                      value={parseValue(layoutConfig.paddingTop || "0px").number}
+                      onChange={handlePaddingChange}
+                      unit={paddingUnit}
                     />
                     <div></div>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.paddingLeft || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handlePaddingChange("paddingLeft", e.target.value)
-                      }
+                    <ClickableInput
+                      property="paddingLeft"
+                      value={parseValue(layoutConfig.paddingLeft || "0px").number}
+                      onChange={handlePaddingChange}
+                      unit={paddingUnit}
                     />
-                    <input
-                      type="number"
-                      placeholder="0"
+                    <ClickableInput
+                      property="padding"
                       value={parseValue(layoutConfig.padding || "0px").number}
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handlePaddingChange("padding", e.target.value)
-                      }
+                      onChange={handlePaddingChange}
+                      unit={paddingUnit}
                     />
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.paddingRight || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handlePaddingChange("paddingRight", e.target.value)
-                      }
+                    <ClickableInput
+                      property="paddingRight"
+                      value={parseValue(layoutConfig.paddingRight || "0px").number}
+                      onChange={handlePaddingChange}
+                      unit={paddingUnit}
                     />
                     <div></div>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={
-                        parseValue(layoutConfig.paddingBottom || "0px").number
-                      }
-                      className="text-xs text-center border border-gray-300 rounded px-1 py-1 w-full"
-                      onChange={(e) =>
-                        handlePaddingChange("paddingBottom", e.target.value)
-                      }
+                    <ClickableInput
+                      property="paddingBottom"
+                      value={parseValue(layoutConfig.paddingBottom || "0px").number}
+                      onChange={handlePaddingChange}
+                      unit={paddingUnit}
                     />
                     <div></div>
                   </div>
@@ -478,6 +513,43 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Slider único compartido */}
+          {activeField && (
+            <ClickAwayListener onClickAway={handleCloseSlider}>
+              <div className="mt-4 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <span className="text-xs font-medium text-gray-600 min-w-[80px]">
+                    {activeField.property}:
+                  </span>
+                  <Slider
+                    value={activeField.value}
+                    min={0}
+                    max={1000}
+                    step={1}
+                    onChange={(_, newValue) => {
+                      const updatedField = { ...activeField, value: newValue as number };
+                      setActiveField(updatedField);
+                      activeField.onChange(activeField.property, String(newValue));
+                    }}
+                    size="small"
+                    className="flex-1"
+                    sx={{
+                      '& .MuiSlider-track': {
+                        backgroundColor: '#3b82f6',
+                      },
+                      '& .MuiSlider-thumb': {
+                        backgroundColor: '#3b82f6',
+                      },
+                    }}
+                  />
+                  <span className="text-xs font-medium text-gray-800 min-w-[50px]">
+                    {activeField.value}{activeField.unit}
+                  </span>
+                </div>
+              </div>
+            </ClickAwayListener>
+          )}
         </div>
       )}
     </div>

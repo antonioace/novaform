@@ -18,6 +18,7 @@ type FormAutoCompleteProps = {
   freeSolo?: boolean;
   multiple?: boolean;
   sx?: SxProps<Theme>;
+  onChange?: (value: any) => void;
 } & Pick<ControllerProps, "rules" | "control">;
 
 export const FormAutoComplete = ({
@@ -38,6 +39,7 @@ export const FormAutoComplete = ({
   freeSolo = false,
   multiple = false,
   sx,
+  onChange,
   ...inputProps
 }: FormAutoCompleteProps) => {
   return (
@@ -69,7 +71,12 @@ export const FormAutoComplete = ({
                 typeof option === "string" ? option : String(option[optionLabel])
               }
               value={field?.value}
-              onChange={(_, newValue) => field.onChange(newValue)}
+              onChange={(_, newValue) => {
+                field.onChange(newValue);
+                if (onChange) {
+                  onChange(newValue);
+                }
+              }}
               disabled={disabled}
               freeSolo={freeSolo}
               renderInput={(params) => (

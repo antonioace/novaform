@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEllipsisV, FaTrash, FaLink } from "react-icons/fa";
+import { FaEllipsisV, FaTrash, FaLink, FaDownload, FaCopy } from "react-icons/fa";
 import { Menu, MenuItem, IconButton, Tooltip } from "@mui/material";
 import FileTypeIcon from "./FileTypeIcon";
 import { FileType } from "../types/file-user.types";
@@ -49,72 +49,79 @@ const FolderCard: React.FC<FolderCardProps> = ({
 
   return (
     <div
-      className="bg-white border rounded-2xl p-6 flex flex-col gap-4 relative hover:shadow-lg transition-shadow min-w-[220px] cursor-pointer"
-      style={{ borderColor: "#EEEEEE" }}
+      className="border-primary-border relative flex w-[200px] cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-all hover:shadow-md"
       onClick={onClick}
     >
-      {/* Menú de opciones en la esquina superior derecha */}
-      <div className="absolute top-3 right-3">
-        <IconButton
-          onClick={handleMenuClick}
-          size="small"
-          sx={{
-            color: "#919EAB",
-            "&:hover": {
-              backgroundColor: "rgba(145, 158, 171, 0.1)",
-            },
-          }}
-        >
-          <FaEllipsisV className="w-3 h-3" />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          PaperProps={{
-            sx: {
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-              borderRadius: "8px",
-              minWidth: "150px",
-            },
-          }}
-        >
-          <MenuItem onClick={handleCopyLink} sx={{ fontSize: "14px", gap: 1 }}>
-            <FaLink className="w-4 h-4 text-blue-500" />
-            Copiar link
-          </MenuItem>
-          <MenuItem
-            onClick={handleDelete}
-            sx={{ fontSize: "14px", gap: 1, color: "#f44336" }}
-          >
-            <FaTrash className="w-4 h-4" />
-            Eliminar
-          </MenuItem>
-        </Menu>
+      {/* Icono del archivo/carpeta */}
+      <div className="flex h-[120px] items-center justify-center rounded-lg bg-gray-100">
+        <FileTypeIcon fileType={fileType} className="w-12 h-12" />
       </div>
 
-      {/* Icono de carpeta y favorito */}
-      <div className="flex items-center justify-between">
-        <div className="text-3xl">
-          <FileTypeIcon fileType={fileType} className="w-8 h-8" />
+      {/* Información del archivo/carpeta */}
+      <div className="flex flex-col gap-2">
+        {/* Nombre */}
+        <div className="flex items-center justify-between">
+          <Tooltip title={name}>
+            <p className="truncate text-sm font-semibold text-gray-800">
+              {name}
+            </p>
+          </Tooltip>
+
+          {/* Menú de opciones */}
+          <IconButton
+            size="small"
+            onClick={handleMenuClick}
+            className="opacity-0 transition-opacity group-hover:opacity-100"
+          >
+            <FaEllipsisV size={12} />
+          </IconButton>
+        </div>
+
+        {/* Información adicional */}
+        <div className="flex flex-col gap-1">
+          <p className="text-xs text-gray-500">
+            {fileType === FileType.FOLDER ? `${files} archivos` : size}
+          </p>
+
+          {fileType === FileType.FOLDER && (
+            <p className="text-xs text-gray-400">{size}</p>
+          )}
         </div>
       </div>
-      {/* Nombre y detalles */}
-      <div>
-        <Tooltip title={name} placement="top">
-          <h3 className="font-semibold text-lg truncate">{name}</h3>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">
-          {size} · {files} archivos
-        </p>
+
+      {/* Menú contextual */}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleMenuClose}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5,
+            width: "20ch",
+          },
+        }}
+      >
+        {onCopyLink && (
+          <MenuItem onClick={handleCopyLink}>
+            <FaLink className="mr-2" size={14} />
+            Copiar enlace
+          </MenuItem>
+        )}
+
+        {onDelete && (
+          <MenuItem onClick={handleDelete}>
+            <FaTrash className="mr-2" size={14} />
+            Eliminar
+          </MenuItem>
+        )}
+      </Menu>
+      <div className="flex flex-col w-full">
+        <button className="bg-[#121212] text-white text-primary-text rounded-md p-2 flex items-center justify-center"
+        onClick={handleCopyLink}
+        >
+          <FaCopy className="mr-2" size={14} />
+          Copiar enlace
+        </button>
       </div>
     </div>
   );

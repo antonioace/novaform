@@ -1,5 +1,7 @@
 import React from "react";
 import { FormQuestion, FormElement } from "../context/CuestionarioContext";
+import { vistaPreguntas } from "./preview/ViewContentType";
+import { CONTENT_TYPES } from "./modals";
 
 // Tipos para los estilos
 export interface ElementStyles {
@@ -316,188 +318,91 @@ const ContentPreview: React.FC<ContentPreviewProps> = ({
 }) => {
   // Obtener estilos para el dispositivo actual
   const currentStyles = { ...defaultStyles[deviceType], ...styles[deviceType] };
+  
+  // Mapeo de tipos de elementos a CONTENT_TYPES
+  const getContentType = (elementType: string): string => {
+    const typeMapping: Record<string, string> = {
+      'text': CONTENT_TYPES.SHORT_TEXT,
+      'email': CONTENT_TYPES.EMAIL,
+      'phone': CONTENT_TYPES.PHONE,
+      'address': CONTENT_TYPES.ADDRESS,
+      'website': CONTENT_TYPES.WEBSITE,
+      'contact_info': CONTENT_TYPES.CONTACT_INFO,
+      'number': CONTENT_TYPES.NUMBER,
+      'textarea': CONTENT_TYPES.LONG_TEXT,
+      'long_text': CONTENT_TYPES.LONG_TEXT,
+      'short_text': CONTENT_TYPES.SHORT_TEXT,
+      'select': CONTENT_TYPES.DROPDOWN,
+      'dropdown': CONTENT_TYPES.DROPDOWN,
+      'multiple_choice': CONTENT_TYPES.MULTIPLE_CHOICE,
+      'checkbox': CONTENT_TYPES.CHECKBOX,
+      'image_choice': CONTENT_TYPES.IMAGE_CHOICE,
+      'yes_no': CONTENT_TYPES.YES_NO,
+      'date': CONTENT_TYPES.DATE,
+      'file_upload': CONTENT_TYPES.FILE_UPLOAD,
+      'video_audio': CONTENT_TYPES.VIDEO_AUDIO,
+      'rating': CONTENT_TYPES.RATING,
+    };
+    
+    return typeMapping[elementType] || elementType;
+  };
+
   // Función para renderizar diferentes tipos de elementos
   const renderElement = (element: FormElement) => {
+    // Obtener el tipo de contenido correspondiente
+    const contentType = getContentType(element.type);
+    
+    // Buscar el componente correspondiente en vistaPreguntas
+    const ViewComponent = vistaPreguntas[contentType];
+    
+    // Si existe el componente, úsalo
+    if (ViewComponent) {
+      return (
+        <div key={element.id} style={currentStyles.elementContainer}>
+          <ViewComponent 
+            config={element}
+            deviceType={deviceType}
+          />
+        </div>
+      );
+    }
+    
+    // Fallback: renderizado manual para tipos no reconocidos
     const elementStyle = currentStyles.elementContainer;
     const labelStyle = currentStyles.elementLabel;
     const requiredStyle = currentStyles.required;
-
-    switch (element.type) {
-      case "text":
-      case "email":
-      case "number":
-        return (
-          <div key={element.id} style={elementStyle}>
-            <label style={labelStyle}>
-              {element.title}
-              {element.required && <span style={requiredStyle}>*</span>}
-            </label>
-            <input
-              type={
-                element.type === "email"
-                  ? "email"
-                  : element.type === "number"
-                  ? "number"
-                  : "text"
-              }
-              placeholder={
-                element.placeholder || `Ingresa ${element.title.toLowerCase()}`
-              }
-              style={currentStyles.input}
-              disabled
-            />
-            {element.description && (
-              <div
-                style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}
-              >
-                {element.description}
-              </div>
-            )}
+    
+    return (
+      <div key={element.id} style={elementStyle}>
+        <label style={labelStyle}>
+          {element.title}
+          {element.required && <span style={requiredStyle}>*</span>}
+        </label>
+        <div
+          style={{
+            padding: "8px 12px",
+            border: "1px dashed #d1d5db",
+            borderRadius: "6px",
+            fontSize: "14px",
+            color: "#9ca3af",
+            textAlign: "center",
+            backgroundColor: "#f9fafb",
+          }}
+        >
+          <div>Elemento tipo: {element.type}</div>
+          <div style={{ fontSize: "12px", marginTop: "4px" }}>
+            Content Type: {contentType}
           </div>
-        );
-
-      case "textarea":
-        return (
-          <div key={element.id} style={elementStyle}>
-            <label style={labelStyle}>
-              {element.title}
-              {element.required && <span style={requiredStyle}>*</span>}
-            </label>
-            <textarea
-              placeholder={
-                element.placeholder || `Ingresa ${element.title.toLowerCase()}`
-              }
-              style={currentStyles.textarea}
-              disabled
-            />
-            {element.description && (
-              <div
-                style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}
-              >
-                {element.description}
-              </div>
-            )}
+        </div>
+        {element.description && (
+          <div
+            style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}
+          >
+            {element.description}
           </div>
-        );
-
-      case "select":
-        return (
-          <div key={element.id} style={elementStyle}>
-            <label style={labelStyle}>
-              {element.title}
-              {element.required && <span style={requiredStyle}>*</span>}
-            </label>
-            <select style={currentStyles.select} disabled>
-              <option>Selecciona una opción</option>
-              {element.options?.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            {element.description && (
-              <div
-                style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}
-              >
-                {element.description}
-              </div>
-            )}
-          </div>
-        );
-
-      case "multiple_choice":
-        return (
-          <div key={element.id} style={elementStyle}>
-            <label style={labelStyle}>
-              {element.title}
-              {element.required && <span style={requiredStyle}>*</span>}
-            </label>
-            <div style={{ marginTop: "8px" }}>
-              {element.options?.map((option, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginBottom: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name={`radio-${element.id}`}
-                    style={currentStyles.radio}
-                    disabled
-                  />
-                  <span style={{ fontSize: "14px", color: "#374151" }}>
-                    {option}
-                  </span>
-                </div>
-              ))}
-            </div>
-            {element.description && (
-              <div
-                style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}
-              >
-                {element.description}
-              </div>
-            )}
-          </div>
-        );
-
-      case "checkbox":
-        return (
-          <div key={element.id} style={elementStyle}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <input type="checkbox" style={currentStyles.checkbox} disabled />
-              <label style={{ ...labelStyle, margin: 0 }}>
-                {element.title}
-                {element.required && <span style={requiredStyle}>*</span>}
-              </label>
-            </div>
-            {element.description && (
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#9ca3af",
-                  marginTop: "4px",
-                  marginLeft: "24px",
-                }}
-              >
-                {element.description}
-              </div>
-            )}
-          </div>
-        );
-
-      default:
-        return (
-          <div key={element.id} style={elementStyle}>
-            <label style={labelStyle}>
-              {element.title}
-              {element.required && <span style={requiredStyle}>*</span>}
-            </label>
-            <div
-              style={{
-                padding: "8px 12px",
-                border: "1px dashed #d1d5db",
-                borderRadius: "6px",
-                fontSize: "14px",
-                color: "#9ca3af",
-                textAlign: "center",
-              }}
-            >
-              Elemento tipo: {element.type}
-            </div>
-            {element.description && (
-              <div
-                style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}
-              >
-                {element.description}
-              </div>
-            )}
-          </div>
-        );
-    }
+        )}
+      </div>
+    );
   };
 
   return <div style={currentStyles.container}>{renderElement(question)}</div>;

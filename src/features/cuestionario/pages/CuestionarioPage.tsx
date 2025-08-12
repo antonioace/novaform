@@ -17,11 +17,13 @@ import {
 import { AddContentModal, EditFormInfoModal } from "../components/modals";
 import { ContentList, ContentEditor, ContentSettings } from "../components";
 import { useRouter } from "next/router";
+import DrawerThemeConfig from "../components/drawers/DrawerThemeConfig";
 
-type TabType = "contenido" | "resultados" | "compartir";
+type TabType = "contenido" | "resultados";
 
 const CuestionarioPageContent = () => {
   const [activeTab, setActiveTab] = useState<TabType>("contenido");
+  const [drawerThemeConfigOpen, setDrawerThemeConfigOpen] = useState(false);
   const router = useRouter();
   const {
     form,
@@ -190,19 +192,11 @@ const CuestionarioPageContent = () => {
               <span>Resultados</span>
             </button>
             <button
-              onClick={() => setActiveTab("compartir")}
-              className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
-                activeTab === "compartir"
-                  ? "border-current text-current"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-              style={{
-                color: activeTab === "compartir" ? "#021642" : undefined,
-                borderColor: activeTab === "compartir" ? "#021642" : undefined,
-              }}
+              onClick={() => setDrawerThemeConfigOpen(true)}
+              className={`py-3 px-1  font-medium text-sm transition-colors flex items-center space-x-2`}
             >
               <FiShare2 className="w-4 h-4" />
-              <span>Compartir</span>
+              <span>Estilos</span>
             </button>
           </div>
         </div>
@@ -233,19 +227,7 @@ const CuestionarioPageContent = () => {
           </div>
         )}
 
-        {activeTab === "compartir" && (
-          <div className="flex-1 flex items-center justify-center p-8">
-            <div className="text-center">
-              <FiShare2 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Compartir
-              </h3>
-              <p className="text-gray-600">
-                Opciones de compartir y distribución del formulario.
-              </p>
-            </div>
-          </div>
-        )}
+  
       </div>
 
       {/* Add Content Modal */}
@@ -262,6 +244,11 @@ const CuestionarioPageContent = () => {
         title={form.title}
         description={form.description}
         onSave={handleSaveFormInfo}
+      />
+
+      <DrawerThemeConfig
+        open={drawerThemeConfigOpen}
+        onClose={() => setDrawerThemeConfigOpen(false)}
       />
     </div>
   );

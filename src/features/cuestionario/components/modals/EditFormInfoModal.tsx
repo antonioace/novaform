@@ -115,20 +115,7 @@ const EditFormInfoModal: React.FC<EditFormInfoModalProps> = ({
             </p>
           </div>
 
-          {/* Vista previa */}
-          <div className="bg-gray-50 p-4 rounded-lg border">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Vista previa:</h4>
-            <div className="bg-white p-4 rounded border">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                {formTitle || "Mi nuevo formulario"}
-              </h3>
-              {formDescription && (
-                <p className="text-sm text-gray-600">
-                  {formDescription}
-                </p>
-              )}
-            </div>
-          </div>
+         
         </div>
 
         {/* Botones de acción */}

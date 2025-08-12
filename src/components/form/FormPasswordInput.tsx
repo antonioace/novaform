@@ -16,6 +16,7 @@ type FormPasswordInputProps = {
   variant?: "outlined" | "filled" | "standard";
   showPasswordToggle?: boolean;
   sx?: SxProps<Theme>;
+  onChange?: (value: string) => void;
 } & Pick<ControllerProps, "rules" | "control">;
 
 export const FormPasswordInput = ({
@@ -33,6 +34,7 @@ export const FormPasswordInput = ({
   variant = "outlined",
   showPasswordToggle = true,
   sx,
+  onChange,
   ...inputProps
 }: FormPasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,6 +66,12 @@ export const FormPasswordInput = ({
             {/* TextField sin label */}
             <TextField
               {...field}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) {
+                  onChange(e.target.value);
+                }
+              }}
               type={showPassword ? "text" : "password"}
               placeholder={placeholder}
               error={!!fieldState.error}

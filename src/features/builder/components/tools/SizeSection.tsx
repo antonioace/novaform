@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MdExpandMore, MdExpandLess, MdLock, MdLockOpen } from "react-icons/md";
 import UnitSelector from "./UnitSelector";
 import { useUnitValue } from "../../hooks/useUnitValue";
+import { Slider } from "@mui/material";
 
 interface SizeSectionProps {
   sizeConfig: {
@@ -14,13 +15,11 @@ interface SizeSectionProps {
     overflow?: string;
   };
   onSizeChange: (property: string, value: string) => void;
-  onSizeChangeMultiple?: (updates: Record<string, string>) => void;
 }
 
 const SizeSection: React.FC<SizeSectionProps> = ({
   sizeConfig,
   onSizeChange,
-  onSizeChangeMultiple,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLinked, setIsLinked] = useState(false);
@@ -53,7 +52,16 @@ const SizeSection: React.FC<SizeSectionProps> = ({
     { value: "scroll", label: "📜", title: "Scroll" },
     { value: "auto", label: "🔄", title: "Auto" },
   ];
-
+  const unitRanges = {
+    px:  { min: 0,   max: 1200, step: 1   },
+    '%': { min: 0,   max: 100,  step: 1   },
+    em:  { min: 0,   max: 75,   step: 0.1 },
+    rem: { min: 0,   max: 75,   step: 0.1 },
+    vh:  { min: 0,   max: 100,  step: 1   },
+    vw:  { min: 0,   max: 100,  step: 1   },
+    auto: null // usa un selector en vez de slider
+  };
+  
   return (
     <div className="border-b border-gray-200">
       <button
@@ -97,6 +105,23 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
               />
+
+              {widthUnit !== "auto" && unitRanges[widthUnit as keyof typeof unitRanges] && (
+                <Slider 
+                  value={parseValue(sizeConfig.width || "100%").number}
+                  min={unitRanges[widthUnit as keyof typeof unitRanges]?.min || 0}
+                  max={unitRanges[widthUnit as keyof typeof unitRanges]?.max || 100}
+                  step={unitRanges[widthUnit as keyof typeof unitRanges]?.step || 1}
+                  onChange={(_, newValue) => {
+                    handleSizeChange("width", String(newValue), widthUnit);
+                    if (isLinked) {
+                      handleSizeChange("height", String(newValue), heightUnit);
+                    }
+                  }}
+                  size="small"
+                  className="mt-2"
+                />
+              )}
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -138,6 +163,23 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
               />
+              
+              {heightUnit !== "auto" && unitRanges[heightUnit as keyof typeof unitRanges] && (
+                <Slider 
+                  value={parseValue(sizeConfig.height || "auto").number}
+                  min={unitRanges[heightUnit as keyof typeof unitRanges]?.min || 0}
+                  max={unitRanges[heightUnit as keyof typeof unitRanges]?.max || 100}
+                  step={unitRanges[heightUnit as keyof typeof unitRanges]?.step || 1}
+                  onChange={(_, newValue) => {
+                    handleSizeChange("height", String(newValue), heightUnit);
+                    if (isLinked) {
+                      handleSizeChange("width", String(newValue), widthUnit);
+                    }
+                  }}
+                  size="small"
+                  className="mt-2"
+                />
+              )}
             </div>
           </div>
 
@@ -151,7 +193,8 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 <UnitSelector
                   selectedUnit={minWidthUnit}
                   onUnitChange={(unit) => handleUnitChange("minWidth", unit)}
-                  availableUnits={["px", "%", "em", "rem", "vh", "vw"]}
+                  availableUnits={["px", "%", "em", "rem", "vh", "vw", "auto"]}
+
                 />
               </div>
               <input
@@ -163,6 +206,20 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
               />
+              
+              {minWidthUnit !== "auto" && unitRanges[minWidthUnit as keyof typeof unitRanges] && (
+                <Slider 
+                  value={parseValue(sizeConfig.minWidth || "0px").number}
+                  min={unitRanges[minWidthUnit as keyof typeof unitRanges]?.min || 0}
+                  max={unitRanges[minWidthUnit as keyof typeof unitRanges]?.max || 100}
+                  step={unitRanges[minWidthUnit as keyof typeof unitRanges]?.step || 1}
+                  onChange={(_, newValue) => {
+                    handleSizeChange("minWidth", String(newValue), minWidthUnit);
+                  }}
+                  size="small"
+                  className="mt-2"
+                />
+              )}
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -172,7 +229,7 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 <UnitSelector
                   selectedUnit={minHeightUnit}
                   onUnitChange={(unit) => handleUnitChange("minHeight", unit)}
-                  availableUnits={["px", "%", "em", "rem", "vh", "vw"]}
+                  availableUnits={["px", "%", "em", "rem", "vh", "vw", "auto"]}
                 />
               </div>
               <input
@@ -184,6 +241,20 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
               />
+              
+              {minHeightUnit !== "auto" && unitRanges[minHeightUnit as keyof typeof unitRanges] && (
+                <Slider 
+                  value={parseValue(sizeConfig.minHeight || "0px").number}
+                  min={unitRanges[minHeightUnit as keyof typeof unitRanges]?.min || 0}
+                  max={unitRanges[minHeightUnit as keyof typeof unitRanges]?.max || 100}
+                  step={unitRanges[minHeightUnit as keyof typeof unitRanges]?.step || 1}
+                  onChange={(_, newValue) => {
+                    handleSizeChange("minHeight", String(newValue), minHeightUnit);
+                  }}
+                  size="small"
+                  className="mt-2"
+                />
+              )}
             </div>
           </div>
 
@@ -197,7 +268,8 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 <UnitSelector
                   selectedUnit={maxWidthUnit}
                   onUnitChange={(unit) => handleUnitChange("maxWidth", unit)}
-                  availableUnits={["px", "%", "em", "rem", "vh", "vw", "none"]}
+                  availableUnits={["px", "%", "em", "rem", "vh", "vw", "auto"]}
+
                 />
               </div>
               <input
@@ -210,6 +282,20 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 min="0"
                 disabled={maxWidthUnit === "none"}
               />
+              
+              {maxWidthUnit !== "auto" && maxWidthUnit !== "none" && unitRanges[maxWidthUnit as keyof typeof unitRanges] && (
+                <Slider 
+                  value={parseValue(sizeConfig.maxWidth || "none").number}
+                  min={unitRanges[maxWidthUnit as keyof typeof unitRanges]?.min || 0}
+                  max={unitRanges[maxWidthUnit as keyof typeof unitRanges]?.max || 100}
+                  step={unitRanges[maxWidthUnit as keyof typeof unitRanges]?.step || 1}
+                  onChange={(_, newValue) => {
+                    handleSizeChange("maxWidth", String(newValue), maxWidthUnit);
+                  }}
+                  size="small"
+                  className="mt-2"
+                />
+              )}
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -219,7 +305,8 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 <UnitSelector
                   selectedUnit={maxHeightUnit}
                   onUnitChange={(unit) => handleUnitChange("maxHeight", unit)}
-                  availableUnits={["px", "%", "em", "rem", "vh", "vw", "none"]}
+                  availableUnits={["px", "%", "em", "rem", "vh", "vw", "auto"]}
+
                 />
               </div>
               <input
@@ -232,6 +319,20 @@ const SizeSection: React.FC<SizeSectionProps> = ({
                 min="0"
                 disabled={maxHeightUnit === "none"}
               />
+              
+              {maxHeightUnit !== "auto" && maxHeightUnit !== "none" && unitRanges[maxHeightUnit as keyof typeof unitRanges] && (
+                <Slider 
+                  value={parseValue(sizeConfig.maxHeight || "none").number}
+                  min={unitRanges[maxHeightUnit as keyof typeof unitRanges]?.min || 0}
+                  max={unitRanges[maxHeightUnit as keyof typeof unitRanges]?.max || 100}
+                  step={unitRanges[maxHeightUnit as keyof typeof unitRanges]?.step || 1}
+                  onChange={(_, newValue) => {
+                    handleSizeChange("maxHeight", String(newValue), maxHeightUnit);
+                  }}
+                  size="small"
+                  className="mt-2"
+                />
+              )}
             </div>
           </div>
 

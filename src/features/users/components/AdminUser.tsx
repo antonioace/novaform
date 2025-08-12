@@ -1,64 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { CircularProgress, Box } from "@mui/material";
 import { IUserResponse } from "../types/user.types";
-import { useNotification } from "@/contexts/NotificationContext";
-import { userService } from "../service/user.service";
-import { useRouter } from "next/router";
 import TableUser from "./TableUser";
+import CustomDrawer from "@/components/drawers/CustomDrawer";
+import { useGetUsers } from "../hooks/useGetUsers";
+import UpdateUserInfoByAdmin from "./UpdateUserInfoByAdmin";
 
 function AdminUser() {
-  const [users, setUsers] = useState<IUserResponse[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { showError, showSuccess } = useNotification();
-  const router = useRouter();
-
-  const fetchUsers = async () => {
-    const response = await userService.get<IUserResponse[]>();
-    setLoading(true);
-    if (response.success && response.data) {
-      setUsers(response.data);
-    } else {
-      showError(response.error || "Error al cargar usuarios");
-    }
-    setLoading(false);
-  };
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [user, setUser] = useState<IUserResponse | null>(null);
+  const { loading, users, page, limit, getUsers, handlePageChange, total } = useGetUsers();
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    getUsers();
+  }, [page]);
 
   const handleEdit = (user: IUserResponse) => {
-    router.push(`/users/edit/${user.id}`);
+    setUser(user);
+    setOpenDrawer(true);
   };
 
-  const handleToggleStatus = async (user: IUserResponse, isActive: boolean) => {
-    try {
-      const response = await userService.update(
-        `/${user.id}`,
-        {
-          ...user,
-          status: isActive ? "1" : "0",
-        },
-        {
-          id: user.id,
-        }
-      );
-      if (response.success) {
-        showSuccess(
-          `Usuario ${user.username} ${
-            isActive ? "activado" : "desactivado"
-          } con éxito`
-        );
-        fetchUsers();
-      } else {
-        showError(
-          response.error || "Error al actualizar el estado del usuario"
-        );
-      }
-    } catch (error) {
-      console.error("Error al actualizar el estado:", error);
-      showError("Error al actualizar el estado del usuario");
-    }
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
+    setUser(null);
+  };
+
+  const handleUpdateSuccess = () => {
+    getUsers();
   };
 
   if (loading) {
@@ -82,8 +50,26 @@ function AdminUser() {
       <TableUser
         data={users}
         onEdit={handleEdit}
-        onToggleStatus={handleToggleStatus}
+        onPageChange={handlePageChange}
+        page={page}
+        loading={loading}
+        limit={limit}
+        total={total}
       />
+      <CustomDrawer
+        isOpen={openDrawer}
+        onClose={handleCloseDrawer}
+        title="Editar Usuario"
+        stylesContainer={{
+          position:"relative"
+        }}
+      >
+        <UpdateUserInfoByAdmin 
+          user={user || undefined} 
+          onSuccess={handleUpdateSuccess}
+          onClose={handleCloseDrawer}
+        />
+      </CustomDrawer>
     </div>
   );
 }

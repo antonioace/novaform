@@ -21,6 +21,99 @@ export interface FormQuestion {
   config?: Record<string, unknown>; // Configuración específica según el tipo
 }
 
+export interface ElementStyleConfig {
+  typography: {
+    fontFamily?: string;
+    fontSize?: string;
+    fontWeight?: string;
+    color?: string;
+    textAlign?: string;
+    textDecoration?: string;
+    lineHeight?: string;
+    letterSpacing?: string;
+    textTransform?: string;
+    fontStyle?: string;
+  };
+  background: {
+    backgroundColor?: string;
+    backgroundImage?: string;
+    backgroundSize?: string;
+    backgroundRepeat?: string;
+    backgroundPosition?: string;
+    backgroundAttachment?: string;
+    gradient?: string;
+  };
+  border: {
+    borderWidth?: string;
+    borderStyle?: string;
+    borderColor?: string;
+    borderRadius?: string;
+    borderTopWidth?: string;
+    borderRightWidth?: string;
+    borderBottomWidth?: string;
+    borderLeftWidth?: string;
+    borderTopLeftRadius?: string;
+    borderTopRightRadius?: string;
+    borderBottomLeftRadius?: string;
+    borderBottomRightRadius?: string;
+  };
+  layout: {
+    display?: string;
+    flexDirection?: string;
+    alignItems?: string;
+    justifyContent?: string;
+    gap?: string;
+    margin?: string;
+    padding?: string;
+    marginLeft?: string;
+    marginRight?: string;
+    marginTop?: string;
+    marginBottom?: string;
+    paddingLeft?: string;
+    paddingRight?: string;
+    paddingTop?: string;
+    paddingBottom?: string;
+  };
+  size: {
+    width?: string;
+    height?: string;
+    minWidth?: string;
+    maxWidth?: string;
+    minHeight?: string;
+    maxHeight?: string;
+    overflow?: string;
+  };
+  position: {
+    position?: string;
+    top?: string;
+    right?: string;
+    bottom?: string;
+    left?: string;
+    zIndex?: string;
+  };
+  effects: {
+    opacity?: string;
+    boxShadow?: string;
+    transform?: string;
+    filter?: string;
+    transition?: string;
+    cursor?: string;
+    zIndex?: string;
+  };
+  customProperties: Array<{
+    property: string;
+    value: string;
+  }>;
+}
+
+export interface QuestionThemeConfig {
+  label: ElementStyleConfig;
+  paragraph: ElementStyleConfig;
+  options: ElementStyleConfig;
+  button: ElementStyleConfig;
+  container: ElementStyleConfig;
+}
+
 export interface CuestionarioForm {
   id: string;
   title: string;
@@ -53,6 +146,11 @@ interface CuestionarioContextType {
   setAddContentModalOpen: (open: boolean) => void;
   editFormInfoModalOpen: boolean;
   setEditFormInfoModalOpen: (open: boolean) => void;
+
+  // Configuración de tema global
+  globalThemeConfig: QuestionThemeConfig | null;
+  setGlobalThemeConfig: React.Dispatch<React.SetStateAction<QuestionThemeConfig | null>>;
+  updateGlobalThemeConfig: (themeConfig: QuestionThemeConfig) => void;
 
   // Acciones del formulario
   updateFormTitle: (title: string) => void;
@@ -136,6 +234,9 @@ export const CuestionarioProvider: React.FC<CuestionarioProviderProps> = ({
   const [deviceType, setDeviceType] = useState<DeviceType>("desktop");
   const [addContentModalOpen, setAddContentModalOpen] = useState(false);
   const [editFormInfoModalOpen, setEditFormInfoModalOpen] = useState(false);
+  
+  // Estado para configuración de tema global
+  const [globalThemeConfig, setGlobalThemeConfig] = useState<QuestionThemeConfig | null>(null);
 
   // Acciones del formulario
   const updateFormTitle = (title: string) => {
@@ -349,6 +450,11 @@ export const CuestionarioProvider: React.FC<CuestionarioProviderProps> = ({
     }));
   };
 
+  // Funciones para manejar configuración de tema global
+  const updateGlobalThemeConfig = (themeConfig: QuestionThemeConfig) => {
+    setGlobalThemeConfig(themeConfig);
+  };
+
   const selectedQuestion = getSelectedQuestion();
   const value: CuestionarioContextType = {
     // Estado
@@ -362,6 +468,11 @@ export const CuestionarioProvider: React.FC<CuestionarioProviderProps> = ({
     setAddContentModalOpen,
     editFormInfoModalOpen,
     setEditFormInfoModalOpen,
+
+    // Configuración de tema global
+    globalThemeConfig,
+    setGlobalThemeConfig,
+    updateGlobalThemeConfig,
 
     // Acciones del formulario
     updateFormTitle,

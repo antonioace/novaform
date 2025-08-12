@@ -1,37 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import ServerSideDataTable from "@/components/table/ServerSideDataTable";
-import { IconButton, Tooltip, Switch } from "@mui/material";
+import { IconButton, Tooltip, Chip } from "@mui/material";
 import { FiEdit2 } from "react-icons/fi";
 import { Column } from "@/features/shared";
 import { IUserResponse } from "../types/user.types";
-import ConfirmUserStatus from "./ConfirmUserStatus";
 import dayjs from "dayjs";
 
 interface TableUserProps {
   onEdit: (user: IUserResponse) => void;
-  onToggleStatus: (user: IUserResponse, isActive: boolean) => void;
   data: IUserResponse[];
+  page: number;
+  total: number;
+  onPageChange: (page: number) => void;
+  loading: boolean;
+  limit: number;
 }
 
-function TableUser({ onEdit, onToggleStatus, data }: TableUserProps) {
-  const [selectedUser, setSelectedUser] = useState<IUserResponse | null>(null);
-  const [isActive, setIsActive] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const handleToggleStatus = (user: IUserResponse, newStatus: boolean) => {
-    setSelectedUser(user);
-    setIsActive(newStatus);
-    setOpenConfirm(true);
-  };
-
-  const handleConfirmStatus = () => {
-    if (selectedUser) {
-      onToggleStatus(selectedUser, isActive);
-      setOpenConfirm(false);
-      setSelectedUser(null);
-    }
-  };
-
+function TableUser({ onEdit, data, onPageChange, page, total, loading, limit }: TableUserProps) {
   const columns: Column[] = [
     {
       id: "username",
@@ -49,13 +34,10 @@ function TableUser({ onEdit, onToggleStatus, data }: TableUserProps) {
       key: "status",
       format: (value: unknown) => {
         const user = value as IUserResponse;
-        console.log("user joderrrrrrrrrr", value);
-        console.log("xxxxxxxxxxxxxxxxxxxxxx", user);
         return (
-          <Switch
-            checked={user?.status === "1" ? true : false}
-            onChange={(e) => handleToggleStatus(user, e.target.checked)}
-            color="success"
+          <Chip
+            label={user?.status === "1" ? "Activo" : "Inactivo"}
+            color={user?.status === "1" ? "success" : "default"}
             size="small"
           />
         );
@@ -98,19 +80,13 @@ function TableUser({ onEdit, onToggleStatus, data }: TableUserProps) {
       <ServerSideDataTable
         columns={columns}
         data={data}
-        totalItems={0}
-        page={1}
-        rowsPerPage={10}
-        onPageChange={() => {}}
+        totalItems={total}
+        page={page}
+        rowsPerPage={limit}
+        onPageChange={onPageChange}
         onRowsPerPageChange={() => {}}
         onSortChange={() => {}}
-      />
-      <ConfirmUserStatus
-        open={openConfirm}
-        onClose={() => setOpenConfirm(false)}
-        onConfirm={handleConfirmStatus}
-        user={selectedUser}
-        isActive={isActive}
+        loading={loading}
       />
     </div>
   );

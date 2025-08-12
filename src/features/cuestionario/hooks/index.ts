@@ -1,0 +1,1 @@
+export { useThemeConfig } from './useThemeConfig'; 

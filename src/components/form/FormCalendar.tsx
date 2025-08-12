@@ -21,6 +21,7 @@ interface FormCalendarProps extends Pick<ControllerProps, "rules" | "control"> {
   size?: "small" | "medium";
   variant?: "outlined" | "filled" | "standard";
   sx?: SxProps<Theme>;
+  onChange?: (value: any) => void;
 }
 
 export const FormCalendar = ({
@@ -38,6 +39,7 @@ export const FormCalendar = ({
   size = "medium",
   variant = "outlined",
   sx,
+  onChange,
   ...inputProps
 }: FormCalendarProps) => {
   return (
@@ -65,7 +67,12 @@ export const FormCalendar = ({
               {showTime ? (
                 <DateTimePicker
                   value={field?.value ? dayjs(field.value) : null}
-                  onChange={field.onChange}
+                  onChange={(newValue) => {
+                    field.onChange(newValue);
+                    if (onChange) {
+                      onChange(newValue);
+                    }
+                  }}
                   slotProps={{
                     textField: {
                       id: field.name,
@@ -103,7 +110,12 @@ export const FormCalendar = ({
               ) : (
                 <DatePicker
                   value={field?.value ? dayjs(field.value) : null}
-                  onChange={field.onChange}
+                  onChange={(newValue) => {
+                    field.onChange(newValue);
+                    if (onChange) {
+                      onChange(newValue);
+                    }
+                  }}
                   slotProps={{
                     textField: {
                       id: field.name,

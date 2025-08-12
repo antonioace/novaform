@@ -17,6 +17,7 @@ interface FormNumberInputProps
   size?: "small" | "medium";
   variant?: "outlined" | "filled" | "standard";
   sx?: SxProps<Theme>;
+  onChange?: (value: number | string) => void;
 }
 
 export const FormNumberInput = ({
@@ -36,6 +37,7 @@ export const FormNumberInput = ({
   size = "medium",
   variant = "outlined",
   sx,
+  onChange,
   ...inputProps
 }: FormNumberInputProps) => {
   return (
@@ -65,6 +67,9 @@ export const FormNumberInput = ({
               onChange={(e) => {
                 const value = e.target.value ? parseFloat(e.target.value) : "";
                 field.onChange(value);
+                if (onChange) {
+                  onChange(value);
+                }
               }}
               type="number"
               placeholder={placeholder}

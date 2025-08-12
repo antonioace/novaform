@@ -23,6 +23,7 @@ interface FormTextInputProps<T extends FieldValues = FieldValues>
   labelClassName?: string;
   labelStyle?: React.CSSProperties;
   sx?: SxProps<Theme>;
+  onChange?: (value: string) => void;
 }
 
 export const FormTextInput = <T extends FieldValues = FieldValues>({
@@ -42,6 +43,7 @@ export const FormTextInput = <T extends FieldValues = FieldValues>({
   sx,
   labelClassName,
   labelStyle,
+  onChange,
   ...inputProps
 }: FormTextInputProps<T>) => {
   return (
@@ -71,6 +73,12 @@ export const FormTextInput = <T extends FieldValues = FieldValues>({
             <TextField
               id={field.name}
               {...field}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) {
+                  onChange(e.target.value);
+                }
+              }}
               value={field?.value || null}
               type={type}
               placeholder={placeholder}

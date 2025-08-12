@@ -61,7 +61,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         <div
           style={{
             ...styles.content,
-            maxHeight: isOpen ? "500px" : "0",
+            maxHeight: isOpen ? "auto" : "0",
             opacity: isOpen ? 1 : 0,
             visibility: isOpen ? "visible" : "hidden",
           }}

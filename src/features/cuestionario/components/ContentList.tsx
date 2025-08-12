@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { FiPlus, FiMail, FiCopy, FiTrash2, FiMove } from "react-icons/fi";
+import { FiPlus, FiCopy, FiTrash2, FiMove } from "react-icons/fi";
 import { useCuestionario } from "../context/CuestionarioContext";
+import { ContentTypeIcon, CONTENT_TYPES, type ContentType } from "./modals";
 
 const ContentList = () => {
   const {
@@ -8,7 +9,6 @@ const ContentList = () => {
     selectedQuestionId,
     setSelectedQuestionId,
     setAddContentModalOpen,
-    addQuestion,
     duplicateQuestion,
     deleteQuestion,
     reorderQuestions,
@@ -37,6 +37,33 @@ const ContentList = () => {
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
+  };
+
+  // Función helper para mapear el tipo de pregunta al tipo de contenido
+  const getQuestionContentType = (questionType: string): ContentType => {
+    // Mapeo de tipos de pregunta a tipos de contenido
+    const typeMap: Record<string, ContentType> = {
+      'contact_info': CONTENT_TYPES.CONTACT_INFO,
+      'email': CONTENT_TYPES.EMAIL,
+      'phone': CONTENT_TYPES.PHONE,
+      'address': CONTENT_TYPES.ADDRESS,
+      'website': CONTENT_TYPES.WEBSITE,
+      'multiple_choice': CONTENT_TYPES.MULTIPLE_CHOICE,
+      'dropdown': CONTENT_TYPES.DROPDOWN,
+      'checkbox': CONTENT_TYPES.CHECKBOX,
+      'image_choice': CONTENT_TYPES.IMAGE_CHOICE,
+      'yes_no': CONTENT_TYPES.YES_NO,
+      'long_text': CONTENT_TYPES.LONG_TEXT,
+      'short_text': CONTENT_TYPES.SHORT_TEXT,
+      'video_audio': CONTENT_TYPES.VIDEO_AUDIO,
+      'number': CONTENT_TYPES.NUMBER,
+      'date': CONTENT_TYPES.DATE,
+      'file_upload': CONTENT_TYPES.FILE_UPLOAD,
+      'rating': CONTENT_TYPES.RATING,
+    };
+    
+    // Retorna el tipo mapeado o un tipo por defecto
+    return typeMap[questionType] || CONTENT_TYPES.SHORT_TEXT;
   };
 
   // Ordenar preguntas por posición antes de renderizar
@@ -89,7 +116,10 @@ const ContentList = () => {
                   className="p-1 rounded"
                   style={{ backgroundColor: "#021642" }}
                 >
-                  <FiMail className="w-3 h-3 text-white" />
+                  <ContentTypeIcon 
+                    type={getQuestionContentType(question.type)} 
+                    className="w-3 h-3 text-white" 
+                  />
                 </div>
               </div>
               <span className="text-xs font-medium text-gray-900">
@@ -124,17 +154,6 @@ const ContentList = () => {
             )}
           </div>
         ))}
-
-        <button
-          onClick={() => addQuestion("contact_info", "Información de contacto")}
-          className="w-full p-2 border border-dashed rounded-lg transition-colors hover:bg-gray-50"
-          style={{
-            color: "#021642",
-            borderColor: "#021642",
-          }}
-        >
-          <FiPlus className="mx-auto w-4 h-4" />
-        </button>
       </div>
     </div>
   );

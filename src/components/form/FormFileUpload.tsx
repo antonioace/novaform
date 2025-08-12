@@ -12,6 +12,7 @@ interface FormFileUploadProps {
   maxSize?: number; // Tamaño máximo en bytes
   helperText?: string;
   style?: React.CSSProperties;
+  onChange?: (files: FileList | null) => void;
 }
 
 export const FormFileUpload: React.FC<FormFileUploadProps> = ({
@@ -23,6 +24,7 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({
   maxSize = 5 * 1024 * 1024, // 5MB por defecto
   helperText,
   style,
+  onChange,
 }) => {
   const {
     control,
@@ -75,7 +77,7 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({
           return required ? "Por favor seleccione un archivo" : true;
         },
       }}
-      render={({ field: { onChange, ...field } }) => (
+      render={({ field: { onChange: fieldOnChange, ...field } }) => (
         <Box>
           <input
             type="file"
@@ -84,7 +86,10 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({
             style={{ display: "none", ...style }}
             onChange={(e) => {
               handleFileChange(e);
-              onChange(e.target.files);
+              fieldOnChange(e.target.files);
+              if (onChange) {
+                onChange(e.target.files);
+              }
             }}
             {...field}
           />

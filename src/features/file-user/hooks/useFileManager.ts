@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useGetMyFiles, useDeleteFile, useUploadFile } from "./index";
 import { FileType, IFileUserResponse } from "../types/file-user.types";
 import { getFileTypeFromUrl } from "../utils";
+import { useNotification } from "@/contexts/NotificationContext";
 
 export const useFileManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,7 +10,7 @@ export const useFileManager = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState<FileType[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
+const notifcation=useNotification()
   // Hooks para manejo de archivos
   const { getMyFiles, myFiles, loading: loadingFiles } = useGetMyFiles();
   const { deleteFile, loading: loadingDelete } = useDeleteFile();
@@ -85,6 +86,7 @@ export const useFileManager = () => {
   const handleCopyLink = (file: IFileUserResponse) => {
     if (file.url) {
       navigator.clipboard.writeText(file.url);
+      notifcation.showSuccess("Enlace copiado al portapapeles");
     }
   };
 

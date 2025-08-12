@@ -1,17 +1,17 @@
 import React from "react";
 import ServerSideDataTable from "@/components/table/ServerSideDataTable";
 import { IconButton, Tooltip } from "@mui/material";
-import { FiEdit2, FiList, FiTrash2 } from "react-icons/fi";
+import { FiEdit2,  FiTrash2 } from "react-icons/fi";
 import { Column } from "@/features/shared";
 import { IRoleResponse } from "../types/role.types";
 
 interface TableRoleProps {
   onEdit: (role: IRoleResponse) => void;
   onDelete: (role: IRoleResponse) => void;
-  onAddPermission: (role: IRoleResponse) => void;
+
 }
 
-function TableRole({ onEdit, onDelete, onAddPermission }: TableRoleProps) {
+function TableRole({ onEdit, onDelete }: TableRoleProps) {
   const columns: Column[] = [
     {
       id: "name",
@@ -40,15 +40,7 @@ function TableRole({ onEdit, onDelete, onAddPermission }: TableRoleProps) {
                 <FiEdit2 className="h-4 w-4" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Ver permisos">
-              <IconButton
-                size="small"
-                color="info"
-                onClick={() => onAddPermission(role)}
-              >
-                <FiList className="h-4 w-4" />
-              </IconButton>
-            </Tooltip>
+            
             <Tooltip title="Eliminar">
               <IconButton
                 size="small"

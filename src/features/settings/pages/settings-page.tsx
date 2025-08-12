@@ -17,14 +17,14 @@ function CataloguePages() {
       key: "general",
       label: "General",
     },
-    {
+ /*    {
       key: "catalogo",
       label: "Catalogo",
     },
     {
       key: "role",
       label: "Roles",
-    },
+    }, */
     {
       key: "user",
       label: "Usuarios",

@@ -26,6 +26,7 @@ interface FormMultiSelectProps
   size?: "small" | "medium";
   variant?: "outlined" | "filled" | "standard";
   sx?: SxProps<Theme>;
+  onChange?: (value: (string | number)[]) => void;
 }
 
 export const FormMultiSelect = ({
@@ -45,6 +46,7 @@ export const FormMultiSelect = ({
   size = "medium",
   variant = "outlined",
   sx,
+  onChange,
   ...inputProps
 }: FormMultiSelectProps) => {
   return (
@@ -99,6 +101,12 @@ export const FormMultiSelect = ({
                 value={field?.value || []}
                 multiple
                 displayEmpty={!!placeholder}
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (onChange) {
+                    onChange(e.target.value as (string | number)[]);
+                  }
+                }}
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {(selected as (string | number)[])?.map((value) => {
